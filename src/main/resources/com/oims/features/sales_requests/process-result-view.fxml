@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@process-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.sales_requests.process.ProcessResultView">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <center>
+      <VBox spacing="14.0" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Title & Metadata -->
+            <VBox spacing="8.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Kết quả xử lý yêu cầu nhập hàng" styleClass="page-title" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã yêu cầu" />
+                              <Label fx:id="requestIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Người tạo" />
+                              <Label fx:id="creatorNameLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày tạo" />
+                              <Label fx:id="creationDateLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Trạng thái hiện tại" />
+                              <Label fx:id="statusLabel" styleClass="status-label" text="-" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <!-- Main Tables Section: Orders on left, details on right -->
+            <HBox spacing="14.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <!-- Created Purchase Orders -->
+                  <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="1. Danh sách đơn hàng mua đã tạo (Purchase Orders)" styleClass="section-title" />
+                        <TableView fx:id="ordersTable" fixedCellSize="38.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                           <placeholder>
+                              <Label text="Không có đơn hàng nào được tạo" />
+                           </placeholder>
+                           <columns>
+                              <TableColumn fx:id="orderIdCol" prefWidth="100.0" text="Mã đơn hàng" />
+                              <TableColumn fx:id="orderSiteCol" prefWidth="180.0" text="Nhà cung cấp (Site)" />
+                              <TableColumn fx:id="orderDeliveryCol" prefWidth="130.0" text="Vận chuyển" />
+                              <TableColumn fx:id="orderStatusCol" prefWidth="100.0" text="Trạng thái" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+
+                  <!-- Selected Purchase Order Items -->
+                  <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="2. Chi tiết đơn hàng được chọn" styleClass="section-title" />
+                        <TableView fx:id="orderItemsTable" fixedCellSize="38.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                           <placeholder>
+                              <Label text="Chọn một đơn hàng ở bảng bên trái để xem chi tiết" />
+                           </placeholder>
+                           <columns>
+                              <TableColumn fx:id="itemMerchCol" prefWidth="280.0" text="Mặt hàng" />
+                              <TableColumn fx:id="itemQtyCol" prefWidth="120.0" text="Số lượng" />
+                              <TableColumn fx:id="itemUnitCol" prefWidth="100.0" text="Đơn vị" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+            <!-- Errors/Skipped items section -->
+            <VBox spacing="8.0" prefHeight="200.0">
+               <children>
+                  <Label text="3. Danh sách lỗi / Thiếu hụt mặt hàng" styleClass="section-title" />
+                  <TableView fx:id="errorsTable" fixedCellSize="38.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Không có lỗi hoặc thiếu hụt nào phát sinh trong quá trình xử lý" />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="errorMerchCol" prefWidth="250.0" text="Mặt hàng" />
+                        <TableColumn fx:id="errorQtyReqCol" prefWidth="110.0" text="SL yêu cầu" />
+                        <TableColumn fx:id="errorQtyAllocCol" prefWidth="110.0" text="SL đáp ứng" />
+                        <TableColumn fx:id="errorQtyMissCol" prefWidth="110.0" text="SL thiếu hụt" />
+                        <TableColumn fx:id="errorReasonCol" prefWidth="340.0" text="Lý do lỗi" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+
+            <!-- Footer Buttons -->
+            <HBox alignment="CENTER_RIGHT" spacing="12.0" style="-fx-padding: 6px 0 0 0;">
+               <children>
+                  <Button fx:id="backBtn" mnemonicParsing="false" styleClass="btn-cancel" text="Quay lại" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

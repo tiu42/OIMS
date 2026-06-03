@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@process-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.sales_requests.process.PlansRequestView">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <center>
+      <VBox spacing="14.0" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Title & Metadata -->
+            <VBox spacing="8.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Xử lý yêu cầu nhập hàng - Bước 2: Chọn phương án đề xuất" styleClass="page-title" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã yêu cầu" />
+                              <Label fx:id="requestIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Người tạo" />
+                              <Label fx:id="creatorNameLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày tạo" />
+                              <Label fx:id="creationDateLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Trạng thái hiện tại" />
+                              <Label fx:id="statusLabel" styleClass="status-label" text="-" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <!-- Main Workspace: Single wide column for Step 2 -->
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="3. Các phương án phân bổ đề xuất" styleClass="section-title" />
+                  <TableView fx:id="plansTable" fixedCellSize="38.0" prefHeight="180.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Không tìm thấy phương án phân bổ khả thi" />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="planNameCol" prefWidth="120.0" text="Phương án" />
+                        <TableColumn fx:id="planSitesCountCol" prefWidth="150.0" text="Số lượng site" />
+                        <TableColumn fx:id="planPrefSitesCol" prefWidth="180.0" text="Khớp site ưu tiên" />
+                        <TableColumn fx:id="planPrefDelivCol" prefWidth="180.0" text="Khớp vận chuyển" />
+                        <TableColumn fx:id="planTotalStockCol" prefWidth="180.0" text="Tổng tồn kho site" />
+                     </columns>
+                  </TableView>
+
+                  <Label text="4. Chi tiết đơn hàng dự kiến của phương án" styleClass="section-title" />
+                  <TableView fx:id="planDetailsTable" fixedCellSize="38.0" prefHeight="220.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Chọn một phương án ở trên để xem chi tiết các đơn hàng dự kiến" />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="detailSiteCol" prefWidth="180.0" text="Nhà cung cấp (Site)" />
+                        <TableColumn fx:id="detailDeliveryCol" prefWidth="180.0" text="Phương thức vận chuyển" />
+                        <TableColumn fx:id="detailMerchCol" prefWidth="300.0" text="Mặt hàng" />
+                        <TableColumn fx:id="detailQtyCol" prefWidth="150.0" text="Số lượng đặt" />
+                     </columns>
+                  </TableView>
+
+                  <!-- Action Buttons -->
+                  <HBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="main-actions" style="-fx-padding: 10px 0 0 0;">
+                     <children>
+                        <Button fx:id="confirmPlanBtn" mnemonicParsing="false" styleClass="btn-submit" text="Xác nhận &amp; Tạo đơn hàng" />
+                        <Button fx:id="backToStep1Btn" mnemonicParsing="false" styleClass="btn-cancel" text="Quay lại" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

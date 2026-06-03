@@ -1,0 +1,151 @@
+
+/* =======================================================
+   TIÊU ĐỀ MÀN HÌNH (HEADER)
+   ======================================================= */
+#titleLabel {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+/* =======================================================
+   KHU VỰC TÌM KIẾM & LỌC (SEARCH & FILTER)
+   ======================================================= */
+.text-field, .combo-box, .search-datepicker {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .combo-box:focused, .search-datepicker:focused {
+    -fx-border-color: #3b82f6;
+    -fx-background-insets: 0;
+}
+
+#refreshButton {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #475569;
+    -fx-cursor: hand;
+    -fx-padding: 6px 16px;
+    -fx-font-weight: bold;
+}
+
+#refreshButton:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+#refreshButton:pressed {
+    -fx-background-color: #e2e8f0;
+}
+
+/* =======================================================
+   THỐNG KÊ NHANH (SUMMARY STATS)
+   ======================================================= */
+#totalOrdersLabel {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3b82f6;
+}
+
+#draftOrdersLabel {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b; /* Xám cho Draft */
+}
+
+#deliveredOrdersLabel {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #10b981; /* Xanh lá cho Delivered */
+}
+
+/* =======================================================
+   BẢNG DỮ LIỆU (TABLE VIEW)
+   ======================================================= */
+.purchase-order-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.purchase-order-table .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.purchase-order-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.purchase-order-table .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+    -fx-padding: 8px 0;
+}
+
+.purchase-order-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.purchase-order-table .table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.purchase-order-table .table-row-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.purchase-order-table .table-row-cell:selected {
+    -fx-background-color: #eff6ff;
+}
+
+.purchase-order-table .table-row-cell:selected .text {
+    -fx-fill: #1e293b;
+}
+
+.purchase-order-table:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* =======================================================
+   PHÂN TRANG (PAGINATION)
+   ====================================================== */
+.pagination-page, .pagination-arrow {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #475569;
+    -fx-cursor: hand;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-font-weight: bold;
+}
+
+.pagination-page:hover, .pagination-arrow:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.pagination-page-active {
+    -fx-background-color: #3b82f6;
+    -fx-border-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.pagination-page-active:hover {
+    -fx-background-color: #2563eb;
+    -fx-border-color: #2563eb;
+}

@@ -1,0 +1,208 @@
+/* =======================================================
+   RESET & THIẾT LẬP CHUNG
+   ======================================================= */
+* {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* =======================================================
+   BỐ CỤC CHÍNH (MAIN LAYOUT)
+   ======================================================= */
+/* Vùng Sidebar bên trái [cite: 1] */
+.sidebar-panel {
+    -fx-background-color: #1e293b; /* Xanh đen hiện đại */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 2, 0);
+}
+
+/* Vùng Nội dung ở giữa [cite: 10] */
+.content-area {
+    -fx-background-color: #f1f5f9; /* Xám nhạt */
+}
+
+/* =======================================================
+   KHU VỰC THƯƠNG HIỆU (BRANDING) [cite: 2]
+   ======================================================= */
+/* Khối bao quanh Logo */
+.brand-mark {
+    -fx-background-color: #3b82f6; /* Xanh dương đậm */
+    -fx-background-radius: 8px;
+}
+
+/* Chữ 'G' trong Logo [cite: 3] */
+.brand-mark-text {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+}
+
+/* Tên thương hiệu Glocerimex [cite: 4] */
+.brand-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 4px;
+}
+
+/* =======================================================
+   KHU VỰC THANH CUỘN MENU (SCROLL PANE)
+   ======================================================= */
+/* Xoá nền mặc định của ScrollPane */
+.sidebar-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.sidebar-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Làm gọn và mờ thanh cuộn dọc (Scrollbar) [cite: 6] */
+.sidebar-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 6px;
+}
+
+.sidebar-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-radius: 4px;
+}
+
+.sidebar-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Định dạng Separator (Đường kẻ ngang) [cite: 7] */
+.sidebar-panel .separator *.line {
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-style: solid;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* =======================================================
+   KHU VỰC THÔNG TIN NGƯỜI DÙNG (USER PROFILE) [cite: 8]
+   ======================================================= */
+.user-name {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.user-role {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 13px;
+    -fx-padding: 0 0 6px 0;
+}
+
+/* =======================================================
+   NÚT ĐĂNG XUẤT (LOGOUT BUTTON)
+   ======================================================= */
+#logoutButton {
+    -fx-background-color: transparent;
+    -fx-border-color: #ef4444; /* Viền đỏ */
+    -fx-border-radius: 6px;
+    -fx-text-fill: #ef4444;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 16px;
+    -fx-cursor: hand;
+}
+
+#logoutButton:hover {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+#logoutButton:pressed {
+    -fx-background-color: #dc2626;
+    -fx-border-color: #dc2626;
+}
+
+/* =======================================================
+   ACCORDION & TITLED PANE (NHÓM MENU)
+   ======================================================= */
+/* Xóa nền mặc định của Accordion để lộ nền tối của Sidebar */
+.accordion {
+    -fx-background-color: transparent;
+}
+
+/* Style cho TitledPane (từng section) */
+.titled-pane {
+    -fx-text-fill: #94a3b8; /* Chữ màu xám nhạt */
+}
+
+/* Thanh tiêu đề của mỗi Section */
+.titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-padding: 10 0 10 0;
+    -fx-cursor: hand;
+}
+
+/* Loại bỏ viền focus mặc định của JavaFX khi click vào Title */
+.titled-pane:focused > .title {
+    -fx-color: transparent;
+}
+
+/* Đổi màu chữ khi hover vào tiêu đề section */
+.titled-pane > .title:hover {
+    -fx-text-fill: #f8fafc;
+}
+
+/* Khi section mở rộng, làm sáng chữ và in đậm */
+.titled-pane:expanded > .title {
+    -fx-text-fill: #f8fafc;
+    -fx-font-weight: bold;
+}
+
+/* Style phần mũi tên (arrow) của TitledPane */
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #94a3b8;
+}
+
+.titled-pane:expanded > .title > .arrow-button .arrow {
+    -fx-background-color: #f8fafc;
+}
+
+/* Vùng chứa nội dung (chứa các menu con) */
+.titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 4 0 8 16; /* Thụt lề trái 16px để tạo cấp độ menu */
+}
+
+/* =======================================================
+   NÚT MENU CON (SIDEBAR ACTION BUTTONS)
+   ======================================================= */
+.sidebar-action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5e1; /* Xám sáng */
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT; /* Ép chữ dạt sang trái */
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+/* Hiệu ứng khi di chuột qua menu item */
+.sidebar-action-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08); /* Nền nổi lên mờ mờ */
+    -fx-text-fill: white;
+}
+
+/* Hiệu ứng khi click chuột */
+.sidebar-action-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Loại bỏ viền xanh mặc định của JavaFX khi button được focus */
+.sidebar-action-button:focused {
+    -fx-background-insets: 0;
+}
+
+/* =======================================================
+   TRẠNG THÁI TRỐNG (EMPTY STATE)
+   ======================================================= */
+.sidebar-empty-state {
+    -fx-text-fill: #64748b; /* Xám tối hơn để không gây chú ý */
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}

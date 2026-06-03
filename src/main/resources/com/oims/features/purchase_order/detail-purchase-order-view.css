@@ -1,0 +1,178 @@
+/* =======================================================
+   TIÊU ĐỀ TRANG & KHUNG BAO NGOÀI
+   ======================================================= */
+.root {
+    -fx-background-color: #f1f5f9;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 0 0 4px 0;
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+    -fx-padding: 4px 0 2px 0;
+}
+
+/* =======================================================
+   KHU VỰC THÔNG TIN CHI TIẾT (METADATA CARD)
+   ======================================================= */
+.info-card {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 16px 20px;
+}
+
+.info-key {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.info-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: bold;
+}
+
+/* Trạng thái đơn hàng (Badges) */
+.status-label {
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 4px 10px;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: center;
+}
+
+.status-draft {
+    -fx-background-color: #f1f5f9;
+    -fx-border-color: #e2e8f0;
+    -fx-text-fill: #475569;
+}
+
+.status-sent {
+    -fx-background-color: #e0f2fe;
+    -fx-border-color: #bae6fd;
+    -fx-text-fill: #0369a1;
+}
+
+.status-confirmed {
+    -fx-background-color: #dcfce7;
+    -fx-border-color: #bbf7d0;
+    -fx-text-fill: #15803d;
+}
+
+.status-delivered {
+    -fx-background-color: #dbeafe;
+    -fx-border-color: #bfdbfe;
+    -fx-text-fill: #1d4ed8;
+}
+
+.status-cancelled {
+    -fx-background-color: #fee2e2;
+    -fx-border-color: #fecaca;
+    -fx-text-fill: #b91c1c;
+}
+
+/* =======================================================
+   BẢNG CHI TIẾT (TABLE VIEW)
+   ======================================================= */
+.detail-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.detail-table .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.detail-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.detail-table .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+    -fx-padding: 8px 0;
+}
+
+.detail-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.detail-table .table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.detail-table .table-row-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.detail-table:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* =======================================================
+   NÚT QUAY LẠI
+   ======================================================= */
+.btn-cancel {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-cancel:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* =======================================================
+   NÚT HÀNH ĐỘNG NÂNG CAO (GỬI ĐƠN & XỬ LÝ)
+   ======================================================= */
+.btn-submit {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-submit:hover {
+    -fx-background-color: #059669;
+}
+
+.btn-generate {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-generate:hover {
+    -fx-background-color: #2563eb;
+}

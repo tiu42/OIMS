@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@../sales_requests/process-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.purchase_order.process_canceled.ProcessCanceledOrderView">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <center>
+      <VBox spacing="14.0" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Title & Metadata -->
+            <VBox spacing="8.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Xử lý đơn hàng bị hủy - Bước 1: Cấu hình ưu tiên" styleClass="page-title" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã đơn hàng bị hủy" />
+                              <Label fx:id="orderIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã yêu cầu gốc" />
+                              <Label fx:id="requestIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày tạo đơn" />
+                              <Label fx:id="orderDateLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Site đối tác bị hủy" />
+                              <Label fx:id="excludedSiteLabel" styleClass="status-label status-error" text="-" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <!-- Main Workspace -->
+            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="1. Danh sách mặt hàng cần thay đổi phương án" styleClass="section-title" />
+                  <TableView fx:id="itemsTable" fixedCellSize="38.0" prefHeight="150.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Không có mặt hàng nào" />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="itemCodeCol" prefWidth="150.0" text="Mã mặt hàng" />
+                        <TableColumn fx:id="itemNameCol" prefWidth="350.0" text="Tên mặt hàng" />
+                        <TableColumn fx:id="itemQtyCol" prefWidth="120.0" text="Số lượng" />
+                        <TableColumn fx:id="itemUnitCol" prefWidth="120.0" text="Đơn vị" />
+                     </columns>
+                  </TableView>
+
+                  <Label text="2. Tồn kho &amp; vận chuyển tại các site đối tác khác (loại trừ site bị hủy)" styleClass="section-title" />
+                  <TableView fx:id="siteStockTable" fixedCellSize="38.0" prefHeight="150.0" styleClass="request-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Không tìm thấy site đối tác khác kinh doanh mặt hàng này" />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="siteCodeCol" prefWidth="120.0" text="Mã site" />
+                        <TableColumn fx:id="siteNameCol" prefWidth="250.0" text="Tên site" />
+                        <TableColumn fx:id="siteStockCol" prefWidth="120.0" text="Tồn kho" />
+                        <TableColumn fx:id="siteShipDaysCol" prefWidth="150.0" text="Thời gian tàu" />
+                        <TableColumn fx:id="siteAirDaysCol" prefWidth="150.0" text="Thời gian bay" />
+                     </columns>
+                  </TableView>
+
+                  <!-- Preference Config Card -->
+                  <VBox spacing="8.0" styleClass="config-card" VBox.vgrow="NEVER">
+                     <children>
+                        <Label text="Cấu hình ưu tiên cho mặt hàng đang chọn" styleClass="config-title" />
+                        <GridPane hgap="12.0" vgap="8.0">
+                           <columnConstraints>
+                              <ColumnConstraints prefWidth="240.0" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="30.0" />
+                              <RowConstraints minHeight="30.0" />
+                              <RowConstraints minHeight="30.0" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="Site ưu tiên:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label" />
+                              <ComboBox fx:id="prefSiteCombo" maxWidth="Infinity" promptText="Không chọn" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="combo-box" />
+
+                              <Label text="Site không ưu tiên:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label" />
+                              <ComboBox fx:id="nonPrefSiteCombo" maxWidth="Infinity" promptText="Không chọn" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="combo-box" />
+
+                              <Label text="Vận chuyển ưu tiên:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label" />
+                              <ComboBox fx:id="prefDeliveryCombo" maxWidth="Infinity" promptText="Không chọn" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="combo-box" />
+                           </children>
+                        </GridPane>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="config-actions">
+                           <children>
+                              <Button fx:id="setDefaultBtn" mnemonicParsing="false" styleClass="btn-default" text="Đặt về mặc định (Tàu &amp; Không ưu tiên site)" />
+                              <Label fx:id="configStatusLabel" styleClass="config-status-default" text="Trạng thái: Mặc định" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <!-- Action Buttons -->
+                  <HBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="main-actions" style="-fx-padding: 10px 0 0 0;">
+                     <children>
+                        <Button fx:id="generatePlansBtn" mnemonicParsing="false" styleClass="btn-generate" text="Lên phương án" />
+                        <Button fx:id="cancelProcessBtn" mnemonicParsing="false" styleClass="btn-cancel" text="Quay lại" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

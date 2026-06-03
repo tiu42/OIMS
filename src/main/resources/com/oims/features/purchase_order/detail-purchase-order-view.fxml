@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@detail-purchase-order-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.purchase_order.detail.OderDetailView">
+   <padding>
+      <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+   </padding>
+   <center>
+      <VBox spacing="18.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox spacing="12.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Chi tiết đơn hàng mua" styleClass="page-title" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã đơn hàng" />
+                              <Label fx:id="orderIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã yêu cầu gốc" />
+                              <Label fx:id="requestIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Nhà cung cấp (Site)" />
+                              <Label fx:id="siteNameLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Người tạo đơn" />
+                              <Label fx:id="creatorNameLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày đặt hàng" />
+                              <Label fx:id="orderDateLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Vận chuyển" />
+                              <Label fx:id="deliveryLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Trạng thái" />
+                              <Label fx:id="statusLabel" styleClass="status-label" text="-" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="Danh sách mặt hàng trong đơn hàng" styleClass="section-title" />
+                  <TableView fx:id="orderItemsTable" fixedCellSize="46.0" styleClass="detail-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Không có mặt hàng nào trong đơn hàng này" />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="merchCodeCol" prefWidth="180.0" text="Mã mặt hàng" />
+                        <TableColumn fx:id="merchNameCol" prefWidth="380.0" text="Tên mặt hàng" />
+                        <TableColumn fx:id="quantityCol" prefWidth="180.0" text="Số lượng" />
+                        <TableColumn fx:id="unitCol" prefWidth="140.0" text="Đơn vị" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                     <children>
+                        <Button fx:id="backBtn" mnemonicParsing="false" styleClass="btn-cancel" text="Quay lại" />
+                        <Button fx:id="sendOrderBtn" mnemonicParsing="false" styleClass="btn-submit" text="Gửi đơn hàng" visible="false" managed="false" />
+                        <Button fx:id="processCanceledBtn" mnemonicParsing="false" styleClass="btn-generate" text="Xử lý đơn hủy" visible="false" managed="false" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

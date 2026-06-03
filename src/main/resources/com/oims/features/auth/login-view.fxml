@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="284.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.auth.LoginView">
+    <children>
+        <Label alignment="CENTER" layoutX="37.0" layoutY="14.0" prefHeight="57.0" prefWidth="282.0" text="Đăng nhập" textAlignment="CENTER">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Label>
+        <TextField fx:id="login_username" layoutX="23.0" layoutY="126.0" prefHeight="42.0" prefWidth="310.0" promptText="Tên người dùng" />
+        <PasswordField fx:id="login_password" layoutX="23.0" layoutY="177.0" prefHeight="42.0" prefWidth="310.0" promptText="Mật khẩu" />
+        <ComboBox fx:id="login_userrole" layoutX="103.0" layoutY="78.0" onAction="#handleSelectRole" prefWidth="150.0" promptText="Chọn vai trò" />
+        <Button fx:id="login_btn" layoutX="23.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="41.0" prefWidth="310.0" text="Đăng nhập" />
+    </children>
+</AnchorPane>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@create-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.sales_requests.edit.EditRequestView">
+   <padding>
+      <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+   </padding>
+   <center>
+      <VBox spacing="18.0" BorderPane.alignment="CENTER">
+         <children>
+            <!-- Title & Metadata -->
+            <VBox spacing="12.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Chỉnh sửa yêu cầu nhập hàng" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã yêu cầu" />
+                              <Label fx:id="requestIdLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Người tạo" />
+                              <Label fx:id="creatorNameLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày tạo" />
+                              <Label fx:id="creationDateLabel" styleClass="info-value" text="-" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Trạng thái" />
+                              <Label fx:id="statusLabel" styleClass="status-new" text="Chờ xử lý" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <!-- Form to add merchandise -->
+            <HBox alignment="BOTTOM_LEFT" spacing="12.0" styleClass="form-card">
+               <children>
+                  <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="form-label" text="Mặt hàng" />
+                        <ComboBox fx:id="merchComboBox" maxWidth="Infinity" promptText="Chọn mặt hàng" styleClass="combo-box" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label styleClass="form-label" text="Số lượng" />
+                        <TextField fx:id="quantityField" prefWidth="110.0" promptText="Nhập số" styleClass="text-field" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label styleClass="form-label" text="Đơn vị" />
+                        <TextField fx:id="unitField" editable="false" prefWidth="110.0" promptText="Đơn vị" styleClass="text-field" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label styleClass="form-label" text="Ngày nhận mong muốn" />
+                        <DatePicker fx:id="desiredDatePicker" prefWidth="180.0" styleClass="search-datepicker" />
+                     </children>
+                  </VBox>
+                  <Button fx:id="addItemBtn" mnemonicParsing="false" styleClass="btn-add-item" text="Thêm mặt hàng" />
+               </children>
+               <padding>
+                  <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+               </padding>
+            </HBox>
+
+            <!-- Table of added items -->
+            <VBox spacing="8.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label styleClass="table-title" text="Danh sách mặt hàng đã chọn" />
+                  <TableView fx:id="addedItemsTable" fixedCellSize="46.0" styleClass="detail-request-table" VBox.vgrow="ALWAYS">
+                     <placeholder>
+                        <Label text="Chưa có mặt hàng nào trong yêu cầu. Hãy thêm từ biểu mẫu phía trên." />
+                     </placeholder>
+                     <columns>
+                        <TableColumn fx:id="merchCodeCol" prefWidth="140.0" text="Mã mặt hàng" />
+                        <TableColumn fx:id="merchNameCol" prefWidth="280.0" text="Tên mặt hàng" />
+                        <TableColumn fx:id="quantityCol" prefWidth="110.0" text="Số lượng" />
+                        <TableColumn fx:id="unitCol" prefWidth="110.0" text="Đơn vị" />
+                        <TableColumn fx:id="desiredDateCol" prefWidth="180.0" text="Ngày nhận" />
+                        <TableColumn fx:id="actionCol" prefWidth="100.0" text="Hành động" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+
+            <!-- Action buttons -->
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Button fx:id="submitBtn" mnemonicParsing="false" styleClass="btn-submit" text="Lưu thay đổi" />
+                  <Button fx:id="cancelBtn" mnemonicParsing="false" styleClass="btn-cancel" text="Quay lại" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

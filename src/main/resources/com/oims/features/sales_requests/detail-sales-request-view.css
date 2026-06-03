@@ -1,0 +1,180 @@
+/* =======================================================
+   TIÊU ĐỀ TRANG & KHUNG BAO NGOÀI
+   ======================================================= */
+.root {
+    -fx-background-color: #f1f5f9; /* Giữ màu nền xám nhạt đồng bộ */
+}
+
+/* Tiêu đề chính của màn hình */
+#pageTitle {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 0 0 4px 0;
+}
+
+/* =======================================================
+   KHU VỰC THÔNG TIN CHI TIẾT (METADATA CARD)
+   ======================================================= */
+.info-card {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 16px 20px;
+}
+
+.info-key {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: normal;
+}
+
+.info-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: bold;
+}
+
+/* Trạng thái xử lý (Badges) */
+.status-pending {
+    -fx-background-color: #fef3c7;
+    -fx-border-color: #fde68a;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #d97706;
+    -fx-padding: 4px 10px;
+}
+
+.status-processing {
+    -fx-background-color: #e0f2fe;
+    -fx-border-color: #bae6fd;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #0369a1;
+    -fx-padding: 4px 10px;
+}
+
+.status-completed {
+    -fx-background-color: #dcfce7;
+    -fx-border-color: #bbf7d0;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #15803d;
+    -fx-padding: 4px 10px;
+}
+
+.status-error {
+    -fx-background-color: #fee2e2;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #b91c1c;
+    -fx-padding: 4px 10px;
+}
+
+/* =======================================================
+   BẢNG CHI TIẾT MẶT HÀNG (TABLE VIEW)
+   ======================================================= */
+.detail-request-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.detail-request-table .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.detail-request-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.detail-request-table .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+    -fx-padding: 8px 0;
+}
+
+.detail-request-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.detail-request-table .table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.detail-request-table .table-row-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.detail-request-table .table-row-cell:selected {
+    -fx-background-color: #eff6ff;
+}
+
+.detail-request-table .table-row-cell:selected .text {
+    -fx-fill: #1e293b;
+}
+
+.detail-request-table:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* =======================================================
+   KHU VỰC NÚT HÀNH ĐỘNG (ACTION BUTTONS)
+   ======================================================= */
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+/* 1. Nút Chỉnh sửa (Secondary Action - Outline Xám) */
+#updateRequestBtn {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-text-fill: #475569;
+}
+#updateRequestBtn:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* 2. Nút Xóa / Hủy (Danger Action - Outline Đỏ) */
+#deleteRequestBtn {
+    -fx-background-color: white;
+    -fx-border-color: #ef4444;
+    -fx-text-fill: #ef4444;
+}
+#deleteRequestBtn:hover {
+    -fx-background-color: #fef2f2;
+}
+
+/* 3. Nút Xem kết quả xử lý (Info Action - Xanh lơ / Teal) */
+#viewProcessResultBtn {
+    -fx-background-color: #e0f2fe;
+    -fx-border-color: #e0f2fe;
+    -fx-text-fill: #0284c7;
+}
+#viewProcessResultBtn:hover {
+    -fx-background-color: #bae6fd;
+}
+
+/* 4. Nút Xử lý yêu cầu (Primary Action - Xanh đậm) */
+#processRequestBtn {
+    -fx-background-color: #3b82f6;
+    -fx-border-color: #3b82f6;
+    -fx-text-fill: white;
+}
+#processRequestBtn:hover {
+    -fx-background-color: #2563eb;
+}

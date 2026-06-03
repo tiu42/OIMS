@@ -1,0 +1,158 @@
+/* =======================================================
+   TIÊU ĐỀ MÀN HÌNH (HEADER)
+   ======================================================= */
+#titleLabel {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b; /* Xanh đen đồng bộ với sidebar */
+}
+
+/* =======================================================
+   KHU VỰC TÌM KIẾM & LỌC (SEARCH & FILTER)
+   ======================================================= */
+/* Định dạng chung cho các ô input */
+.text-field, .combo-box, .search-datepicker {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .combo-box:focused, .search-datepicker:focused {
+    -fx-border-color: #3b82f6; /* Xanh dương nổi bật khi click vào */
+    -fx-background-insets: 0;
+}
+
+/* Nút làm mới */
+#refreshButton {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #475569;
+    -fx-cursor: hand;
+    -fx-padding: 6px 16px;
+}
+
+#refreshButton:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+#refreshButton:pressed {
+    -fx-background-color: #e2e8f0;
+}
+
+/* =======================================================
+   THỐNG KÊ NHANH (SUMMARY STATS)
+   ======================================================= */
+/* Nhấn mạnh các con số thống kê */
+#totalRequestsLabel {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3b82f6; /* Xanh dương cho Tổng */
+}
+
+#pendingRequestsLabel {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #eab308; /* Vàng cam cho Chưa xử lý */
+}
+
+#errorRequestsLabel {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ef4444; /* Đỏ cho Lỗi */
+}
+
+/* =======================================================
+   BẢNG DỮ LIỆU (TABLE VIEW)
+   ======================================================= */
+.import-request-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+/* Cột tiêu đề bảng */
+.import-request-table .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.import-request-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.import-request-table .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b; /* Chữ xám nhạt */
+    -fx-padding: 8px 0;
+}
+
+/* Hàng dữ liệu trong bảng */
+.import-request-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Hiệu ứng sọc vằn (Zebra striping) cho dễ nhìn */
+.import-request-table .table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.import-request-table .table-row-cell:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Trạng thái khi chọn 1 dòng */
+.import-request-table .table-row-cell:selected {
+    -fx-background-color: #eff6ff;
+}
+
+.import-request-table .table-row-cell:selected .text {
+    -fx-fill: #1e293b;
+}
+
+/* Xóa viền focus mặc định của bảng */
+.import-request-table:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* =======================================================
+   PHÂN TRANG (PAGINATION)
+   ======================================================= */
+/* Các nút phân trang bình thường và nút mũi tên */
+.pagination-page, .pagination-arrow {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #475569;
+    -fx-cursor: hand;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+}
+
+.pagination-page:hover, .pagination-arrow:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Nút phân trang đang được chọn (Active) */
+.pagination-page-active {
+    -fx-background-color: #3b82f6;
+    -fx-border-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.pagination-page-active:hover {
+    -fx-background-color: #2563eb;
+    -fx-border-color: #2563eb;
+}

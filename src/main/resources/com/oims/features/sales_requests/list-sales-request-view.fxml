@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="780.0" prefWidth="1280.0" stylesheets="@list-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.sales_requests.list.RequestListController">
+    <padding>
+        <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+    </padding>
+    <center>
+        <VBox spacing="18.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox spacing="14.0">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <children>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="titleLabel" text="Danh sách yêu cầu nhập hàng" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <TextField fx:id="searchField" prefWidth="360.0" promptText="Tìm kiếm" />
+                                <ComboBox fx:id="statusFilterComboBox" prefWidth="170.0" promptText="Trạng thái" styleClass="combo-box" />
+                                <DatePicker fx:id="fromDatePicker" maxHeight="40.0" prefHeight="40.0" prefWidth="150.0" promptText="Từ ngày" styleClass="search-datepicker" />
+                                <DatePicker fx:id="toDatePicker" maxHeight="40.0" prefHeight="40.0" prefWidth="150.0" promptText="Đến ngày" styleClass="search-datepicker" />
+                                <Button fx:id="refreshButton" text="Làm mới" />
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Tổng yêu cầu">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font></Label>
+                                        <Label fx:id="totalRequestsLabel" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Yêu cầu chưa xử lý">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font></Label>
+                                        <Label fx:id="pendingRequestsLabel" text="0" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Yêu cầu lỗi">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font></Label>
+                                        <Label fx:id="errorRequestsLabel" text="0" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label text="Danh sách yêu cầu" />
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="importRequestTable" fixedCellSize="46.0" prefHeight="464.0" prefWidth="1040.0" styleClass="import-request-table" VBox.vgrow="ALWAYS">
+                            <placeholder>
+                                <Label text="Vui lòng nạp dữ liệu yêu cầu" />
+                            </placeholder>
+                            <columns>
+                                <TableColumn fx:id="selectColumn" prefWidth="70.0" text="Chọn" />
+                                <TableColumn fx:id="requestIdColumn" prefWidth="160.8000030517578" text="Mã yêu cầu (request ID)" />
+                                <TableColumn fx:id="creatorColumn" prefWidth="269.60003662109375" text="Người tạo" />
+                                <TableColumn fx:id="createdDateColumn" prefWidth="160.0" text="Ngày tạo" />
+                                <TableColumn fx:id="statusColumn" prefWidth="170.0" text="Trạng thái" />
+                            </columns>
+                        </TableView>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <Label text="10 bản ghi / trang" />
+                                <Label fx:id="pageInfoLabel" text="Trang 1 / 1" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button fx:id="pagePrevButton" styleClass="pagination-arrow" text="‹" />
+                                <Button fx:id="pageButton1" styleClass="pagination-page" text="1" />
+                                <Button fx:id="pageButton2" styleClass="pagination-page" text="2" />
+                                <Button fx:id="pageButton3" styleClass="pagination-page" text="3" />
+                                <Button fx:id="pageButton4" styleClass="pagination-page" text="4" />
+                                <Button fx:id="pageButton5" styleClass="pagination-page" text="5" />
+                                <Button fx:id="pageNextButton" styleClass="pagination-arrow" text="›" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

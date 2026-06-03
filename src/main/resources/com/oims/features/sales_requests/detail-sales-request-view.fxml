@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@detail-sales-request-view.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.sales_requests.detail.RequestDetailView">
+   <padding>
+      <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+   </padding>
+   <center>
+      <VBox spacing="18.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox spacing="12.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Chi tiết yêu cầu" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã yêu cầu" />
+                              <Label fx:id="requestIdLabel" styleClass="info-value" text="abc" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Người tạo" />
+                              <Label fx:id="creatorNameLabel" styleClass="info-value" text="tên" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày tạo" />
+                              <Label fx:id="creationDateLabel" styleClass="info-value" text="ngày" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Trạng thái xử lý" />
+                              <Label fx:id="requestStatusLabel" styleClass="info-value" text="tt" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="requestDetailTable" fixedCellSize="46.0" styleClass="detail-request-table" VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label text="Không có mặt hàng nào trong yêu cầu" />
+                    </placeholder>
+                    <columns>
+                      <TableColumn fx:id="merchIdColumn" prefWidth="140.0" text="Mã mặt hàng" />
+                      <TableColumn fx:id="merchNameColumn" prefWidth="280.0" text="Tên mặt hàng" />
+                      <TableColumn fx:id="quantityColumn" prefWidth="120.0" text="Số lượng" />
+                      <TableColumn fx:id="unitColumn" prefWidth="120.0" text="Đơn vị" />
+                      <TableColumn fx:id="desiredDateColumn" prefWidth="220.0" text="Ngày nhận mong muốn" />
+                    </columns>
+                  </TableView>
+                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                     <children>
+                        <Button fx:id="updateRequestBtn" mnemonicParsing="false" text="Chỉnh sửa yêu cầu" />
+                        <Button fx:id="deleteRequestBtn" mnemonicParsing="false" text="Hủy yêu cầu" />
+                        <Button fx:id="processRequestBtn" mnemonicParsing="false" text="Xử lý yêu cầu" />
+                        <Button fx:id="viewProcessResultBtn" mnemonicParsing="false" text="Xem kết quả xử lý" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
