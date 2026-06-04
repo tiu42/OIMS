@@ -199,7 +199,7 @@ public class OrderListView implements Initializable {
             OrderListRow row = cellData.getValue();
             if (currentUser != null && currentUser.getRole() == UserRole.WAREHOUSE) {
                 PurchaseOrderStatus status = row.getStatus();
-                if (status == PurchaseOrderStatus.CONFIRMED) {
+                if (status == PurchaseOrderStatus.SENT || status == PurchaseOrderStatus.CONFIRMED) {
                     return new ReadOnlyStringWrapper("Chưa xác nhận");
                 } else if (status == PurchaseOrderStatus.DELIVERED) {
                     return new ReadOnlyStringWrapper("Đã xác nhận");
@@ -264,7 +264,9 @@ public class OrderListView implements Initializable {
 
             if (currentUser != null && currentUser.getRole() == UserRole.WAREHOUSE) {
                 orders = orders.stream()
-                        .filter(o -> o.getStatus() == PurchaseOrderStatus.CONFIRMED || o.getStatus() == PurchaseOrderStatus.DELIVERED)
+                        .filter(o -> o.getStatus() == PurchaseOrderStatus.SENT
+                                || o.getStatus() == PurchaseOrderStatus.CONFIRMED
+                                || o.getStatus() == PurchaseOrderStatus.DELIVERED)
                         .collect(Collectors.toList());
             }
 
@@ -357,7 +359,7 @@ public class OrderListView implements Initializable {
         if (currentUser != null && currentUser.getRole() == UserRole.WAREHOUSE) {
             PurchaseOrderStatus status = row.getStatus();
             if ("Chưa xác nhận".equalsIgnoreCase(selectedStatus)) {
-                return status == PurchaseOrderStatus.CONFIRMED;
+                return status == PurchaseOrderStatus.SENT || status == PurchaseOrderStatus.CONFIRMED;
             } else if ("Đã xác nhận".equalsIgnoreCase(selectedStatus)) {
                 return status == PurchaseOrderStatus.DELIVERED;
             }

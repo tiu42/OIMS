@@ -36,7 +36,8 @@ public final class WarehouseView extends MainView {
             java.util.Optional<com.oims.core.model.PurchaseOrder> orderOpt = new com.oims.core.dao.PurchaseOrderDao().findById(orderId);
             if (orderOpt.isPresent()) {
                 com.oims.core.model.PurchaseOrderStatus status = orderOpt.get().getStatus();
-                if (status != com.oims.core.model.PurchaseOrderStatus.CONFIRMED) {
+                if (status != com.oims.core.model.PurchaseOrderStatus.SENT
+                        && status != com.oims.core.model.PurchaseOrderStatus.CONFIRMED) {
                     alertMessage.errorMessage("Chỉ có thể xác nhận đơn hàng nhập kho ở trạng thái 'Chưa xác nhận'!");
                     return false;
                 }

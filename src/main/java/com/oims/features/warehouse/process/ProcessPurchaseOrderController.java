@@ -90,6 +90,9 @@ public class ProcessPurchaseOrderController {
         Optional<PurchaseOrder> orderOpt = purchaseOrderDao.findById(orderId);
         if (orderOpt.isPresent()) {
             PurchaseOrder order = orderOpt.get();
+            if (order.getStatus() != PurchaseOrderStatus.SENT && order.getStatus() != PurchaseOrderStatus.CONFIRMED) {
+                throw new IllegalArgumentException("Chỉ có thể duyệt đơn hàng nhập kho ở trạng thái chưa xác nhận.");
+            }
             order.setStatus(PurchaseOrderStatus.DELIVERED);
             purchaseOrderDao.update(order);
         } else {

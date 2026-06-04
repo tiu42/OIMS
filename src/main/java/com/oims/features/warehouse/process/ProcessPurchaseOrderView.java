@@ -4,6 +4,7 @@ import com.oims.core.dao.*;
 import com.oims.core.model.*;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,6 +80,13 @@ public class ProcessPurchaseOrderView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        User currentUser = AppSession.getInstance().getCurrentUser();
+        if (currentUser == null || currentUser.getRole() != UserRole.WAREHOUSE) {
+            new AlertMessage().errorMessage("Chỉ nhân viên quản lý kho mới được xác nhận đơn hàng nhập kho.");
+            handleBack();
+            return;
+        }
+
         orderId = AppSession.getInstance().getSelectedOrderId();
         if (orderId == null) {
             new AlertMessage().errorMessage("Không tìm thấy mã đơn hàng cần duyệt.");
@@ -186,7 +194,13 @@ public class ProcessPurchaseOrderView implements Initializable {
             // Delivery
             deliveryLabel.setText(order.getDeliveryMeans() == DeliveryMeans.SHIP_DELIVERY ? "Đường biển (Tàu)" : "Đường hàng không (Máy bay)");
 
-            // Status (Always starts as CONFIRMED -> display as "Chưa xác nhận")
+            if (order.getStatus() != PurchaseOrderStatus.SENT && order.getStatus() != PurchaseOrderStatus.CONFIRMED) {
+                new AlertMessage().errorMessage("Chỉ có thể xác nhận đơn hàng nhập kho ở trạng thái 'Chưa xác nhận'.");
+                handleBack();
+                return;
+            }
+
+            // Status SENT/CONFIRMED is shown to warehouse as "Chưa xác nhận".
             statusLabel.setText("Chưa xác nhận");
 
             // Load items
@@ -275,6 +289,10 @@ public class ProcessPurchaseOrderView implements Initializable {
 
     private void handleBack() {
         try {
+            if (pageTitle.getScene() == null) {
+                Platform.runLater(this::handleBack);
+                return;
+            }
             Parent view = FXMLLoader.load(getClass().getResource("/com/oims/features/purchase_order/filtered-purchase-order-view.fxml"));
             StackPane contentArea = (StackPane) pageTitle.getScene().lookup("#contentArea");
             if (contentArea != null) {

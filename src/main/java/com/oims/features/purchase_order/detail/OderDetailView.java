@@ -135,7 +135,7 @@ public class OderDetailView implements Initializable {
             User currentUser = AppSession.getInstance().getCurrentUser();
             String statusText = switch (order.getStatus()) {
                 case DRAFT -> "Bản nháp";
-                case SENT -> "Đã gửi";
+                case SENT -> (currentUser != null && currentUser.getRole() == UserRole.WAREHOUSE) ? "Chưa xác nhận" : "Đã gửi";
                 case CONFIRMED -> (currentUser != null && currentUser.getRole() == UserRole.WAREHOUSE) ? "Chưa xác nhận" : "Xác nhận";
                 case DELIVERED -> (currentUser != null && currentUser.getRole() == UserRole.WAREHOUSE) ? "Đã xác nhận" : "Đã giao";
                 case CANCELLED -> "Đã hủy";

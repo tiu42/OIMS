@@ -78,7 +78,7 @@ public record OrderListRow(PurchaseOrder purchaseOrder, String creatorName, Stri
         String statusLabel = getStatusLabel();
         if (role == UserRole.WAREHOUSE) {
             PurchaseOrderStatus status = getStatus();
-            if (status == PurchaseOrderStatus.CONFIRMED) {
+            if (status == PurchaseOrderStatus.SENT || status == PurchaseOrderStatus.CONFIRMED) {
                 statusLabel = "Chưa xác nhận";
             } else if (status == PurchaseOrderStatus.DELIVERED) {
                 statusLabel = "Đã xác nhận";
