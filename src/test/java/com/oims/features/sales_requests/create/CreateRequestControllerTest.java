@@ -9,6 +9,7 @@ import com.oims.core.model.SalesRequestItem;
 import com.oims.core.model.SalesRequestStatus;
 import com.oims.core.model.User;
 import com.oims.core.model.UserRole;
+import com.oims.features.sales_requests.dto.RequestItemDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,8 +40,8 @@ class CreateRequestControllerTest {
         User creator = createUser(10);
 
         controller.saveSalesRequest(creator, List.of(
-                new CreateRequestController.TempRequestItem("M001", 5, "pcs", LocalDate.now().plusDays(3)),
-                new CreateRequestController.TempRequestItem("M002", 2, "box", LocalDate.now().plusDays(5))
+                new RequestItemDTO("M001", 5, "pcs", LocalDate.now().plusDays(3)),
+                new RequestItemDTO("M002", 2, "box", LocalDate.now().plusDays(5))
         ));
 
         assertEquals(1, salesRequestDao.savedRequests.size());
@@ -54,7 +55,7 @@ class CreateRequestControllerTest {
     void saveSalesRequestRejectsMissingCreator() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.saveSalesRequest(null, List.of(
-                        new CreateRequestController.TempRequestItem("M001", 5, "pcs", LocalDate.now().plusDays(3))
+                        new RequestItemDTO("M001", 5, "pcs", LocalDate.now().plusDays(3))
                 ))
         );
 
@@ -75,7 +76,7 @@ class CreateRequestControllerTest {
     void saveSalesRequestRejectsNonPositiveQuantity() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.saveSalesRequest(createUser(10), List.of(
-                        new CreateRequestController.TempRequestItem("M001", 0, "pcs", LocalDate.now().plusDays(3))
+                        new RequestItemDTO("M001", 0, "pcs", LocalDate.now().plusDays(3))
                 ))
         );
 
@@ -86,7 +87,7 @@ class CreateRequestControllerTest {
     void saveSalesRequestRejectsPastDesiredDate() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.saveSalesRequest(createUser(10), List.of(
-                        new CreateRequestController.TempRequestItem("M001", 5, "pcs", LocalDate.now().minusDays(1))
+                        new RequestItemDTO("M001", 5, "pcs", LocalDate.now().minusDays(1))
                 ))
         );
 
@@ -169,6 +170,16 @@ class CreateRequestControllerTest {
         public boolean updateStatus(Connection connection, int requestId, SalesRequestStatus status) {
             return true;
         }
+
+        @Override
+        public boolean updateStatus(int requestId, SalesRequestStatus status) {
+            return true;
+        }
+
+        @Override
+        public boolean updateStatusIfCurrent(int requestId, SalesRequestStatus expectedStatus, SalesRequestStatus newStatus) {
+            return true;
+        }
     }
 
     private static class FakeSalesRequestItemDao implements ISalesRequestItemDao {
@@ -198,6 +209,11 @@ class CreateRequestControllerTest {
         }
 
         @Override
+        public int insert(Connection connection, SalesRequestItem item) {
+            return insert(item);
+        }
+
+        @Override
         public boolean update(SalesRequestItem item) {
             return true;
         }
@@ -210,6 +226,11 @@ class CreateRequestControllerTest {
         @Override
         public void deleteByRequestId(int requestId) {
             savedItems.removeIf(item -> item.getRequestId() == requestId);
+        }
+
+        @Override
+        public void deleteByRequestId(Connection connection, int requestId) {
+            deleteByRequestId(requestId);
         }
     }
 }

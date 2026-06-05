@@ -6,6 +6,8 @@ import com.oims.core.model.SalesRequest;
 import com.oims.core.model.SalesRequestItem;
 import com.oims.core.model.SalesRequestStatus;
 import com.oims.core.model.User;
+import com.oims.features.sales_requests.dto.RequestItemDTO;
+import com.oims.features.sales_requests.shared.RequestItemValidator;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -32,34 +34,12 @@ public class CreateRequestController {
         return merchandiseDao.findAll();
     }
 
-    public void saveSalesRequest(User creator, List<TempRequestItem> tempItems) throws SQLException, IllegalArgumentException {
+    public void saveSalesRequest(User creator, List<RequestItemDTO> items) throws SQLException, IllegalArgumentException {
         if (creator == null) {
             throw new IllegalArgumentException("Không tìm thấy thông tin người tạo. Vui lòng đăng nhập lại.");
         }
-        if (tempItems == null || tempItems.isEmpty()) {
-            throw new IllegalArgumentException("Danh sách mặt hàng yêu cầu không được để trống.");
-        }
+        RequestItemValidator.validateAll(items);
 
-        // Validate items
-        for (TempRequestItem item : tempItems) {
-            if (item.merchandiseCode() == null || item.merchandiseCode().isBlank()) {
-                throw new IllegalArgumentException("Mã mặt hàng không hợp lệ.");
-            }
-            if (item.quantity() <= 0) {
-                throw new IllegalArgumentException("Số lượng mặt hàng phải lớn hơn 0.");
-            }
-            if (item.unit() == null || item.unit().isBlank()) {
-                throw new IllegalArgumentException("Đơn vị mặt hàng không được để trống.");
-            }
-            if (item.desiredDate() == null) {
-                throw new IllegalArgumentException("Ngày nhận mong muốn không được để trống.");
-            }
-            if (item.desiredDate().isBefore(LocalDate.now())) {
-                throw new IllegalArgumentException("Ngày nhận mong muốn không được ở trong quá khứ.");
-            }
-        }
-
-        // Insert SalesRequest
         SalesRequest salesRequest = new SalesRequest();
         salesRequest.setCreatedBy(creator.getUserId());
         salesRequest.setCreatedDate(LocalDate.now());
@@ -70,18 +50,15 @@ public class CreateRequestController {
             throw new SQLException("Không thể tạo yêu cầu nhập hàng.");
         }
 
-        // Insert items
-        for (TempRequestItem tempItem : tempItems) {
+        for (RequestItemDTO item : items) {
             SalesRequestItem salesRequestItem = new SalesRequestItem();
             salesRequestItem.setRequestId(requestId);
-            salesRequestItem.setMerchandiseCode(tempItem.merchandiseCode());
-            salesRequestItem.setQuantityOrdered(tempItem.quantity());
-            salesRequestItem.setUnit(tempItem.unit());
-            salesRequestItem.setDesiredDeliveryDate(tempItem.desiredDate());
+            salesRequestItem.setMerchandiseCode(item.merchandiseCode());
+            salesRequestItem.setQuantityOrdered(item.quantity());
+            salesRequestItem.setUnit(item.unit());
+            salesRequestItem.setDesiredDeliveryDate(item.desiredDate());
 
             salesRequestItemDao.insert(salesRequestItem);
         }
     }
-
-    public record TempRequestItem(String merchandiseCode, int quantity, String unit, LocalDate desiredDate) {}
 }

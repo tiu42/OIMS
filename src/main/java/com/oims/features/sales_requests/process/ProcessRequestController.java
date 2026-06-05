@@ -122,4 +122,26 @@ public class ProcessRequestController {
     public void savePlan(int requestId, User creator, PlanDTO plan, boolean hasErrors) throws SQLException {
         planPersistenceService.savePlan(requestId, creator, plan, hasErrors);
     }
+
+    /**
+     * Khóa yêu cầu để Sales không chỉnh sửa trong lúc Overseas xử lý.
+     * Cho phép tiếp tục nếu yêu cầu đã ở trạng thái PROCESSING (quay lại từ bước phương án).
+     */
+    public boolean beginProcessing(int requestId) throws SQLException {
+        Optional<SalesRequest> requestOpt = salesRequestDao.findById(requestId);
+        if (requestOpt.isEmpty()) {
+            return false;
+        }
+
+        SalesRequestStatus status = requestOpt.get().getStatus();
+        if (status == SalesRequestStatus.PENDING) {
+            return salesRequestDao.updateStatusIfCurrent(requestId, SalesRequestStatus.PENDING, SalesRequestStatus.PROCESSING);
+        }
+        return status == SalesRequestStatus.PROCESSING;
+    }
+
+    /** Mở khóa khi Overseas hủy xử lý trước khi xác nhận phương án. */
+    public void cancelProcessing(int requestId) throws SQLException {
+        salesRequestDao.updateStatusIfCurrent(requestId, SalesRequestStatus.PROCESSING, SalesRequestStatus.PENDING);
+    }
 }

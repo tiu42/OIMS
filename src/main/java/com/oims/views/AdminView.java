@@ -15,7 +15,6 @@ public final class AdminView extends MainView {
                 section("Quản lý yêu cầu nhập hàng",
                         item("Danh sách yêu cầu", "/com/oims/features/sales_requests/list-sales-request-view.fxml", ()->true),
                         item("Danh sách yêu cầu đã tạo", "/com/oims/features/sales_requests/list-sales-request-view.fxml", ()->true),
-                        item("Xem chi tiết yêu cầu", "/com/oims/features/sales_requests/detail-sales-request-view.fxml", this::check_session_req),
                         item("Tạo yêu cầu mới", "/com/oims/features/sales_requests/create-sales-request-view.fxml", ()->true),
                         item("Xử lý yêu cầu", "/com/oims/features/sales_requests/process-sales-request-view.fxml", this::check_session_req_for_process)
                 ),
@@ -42,14 +41,6 @@ public final class AdminView extends MainView {
     }
 
     private final com.oims.core.util.AlertMessage alertMessage = new com.oims.core.util.AlertMessage();
-
-    private boolean check_session_req() {
-        if (com.oims.core.session.AppSession.getInstance().getSelectedRequestId() == null) {
-            alertMessage.errorMessage("Chưa có yêu cầu nào được chọn! Hãy chọn 1 yêu cầu từ danh sách.");
-            return false;
-        }
-        return true;
-    }
 
     private boolean check_session_req_for_process() {
         if (com.oims.core.session.AppSession.getInstance().getSelectedRequestId() == null) {

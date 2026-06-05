@@ -119,11 +119,29 @@ public class ProcessRequestView implements Initializable {
         }
 
         initTableColumns();
+        if (!tryBeginProcessing()) {
+            return;
+        }
         loadRequestData();
         initEventHandlers();
 
         itemsTable.setItems(demandsList);
         siteStockTable.setItems(siteStockList);
+    }
+
+    private boolean tryBeginProcessing() {
+        try {
+            if (!controller.beginProcessing(requestId)) {
+                alertMessage.errorMessage("Không thể xử lý yêu cầu này. Yêu cầu có thể đã được xử lý xong hoặc không còn ở trạng thái Chờ xử lý.");
+                navigateBackToDetail(false);
+                return false;
+            }
+            return true;
+        } catch (SQLException e) {
+            alertMessage.errorMessage("Không thể bắt đầu xử lý yêu cầu: " + e.getMessage());
+            navigateBackToDetail(false);
+            return false;
+        }
     }
 
     private void initTableColumns() {
@@ -426,10 +444,23 @@ public class ProcessRequestView implements Initializable {
     }
 
     private void handleCancel() {
-        navigateBackToDetail();
+        navigateBackToDetail(true);
     }
 
     private void navigateBackToDetail() {
+        navigateBackToDetail(true);
+    }
+
+    private void navigateBackToDetail(boolean releaseProcessingLock) {
+        if (releaseProcessingLock && requestId != null) {
+            try {
+                controller.cancelProcessing(requestId);
+            } catch (SQLException e) {
+                alertMessage.errorMessage("Không thể hủy trạng thái xử lý yêu cầu: " + e.getMessage());
+                return;
+            }
+        }
+
         try {
             Parent view = FXMLLoader.load(getClass().getResource("/com/oims/features/sales_requests/detail-sales-request-view.fxml"));
             StackPane contentArea = (StackPane) pageTitle.getScene().lookup("#contentArea");

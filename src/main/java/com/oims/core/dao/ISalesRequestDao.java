@@ -15,4 +15,6 @@ public interface ISalesRequestDao {
     boolean update(SalesRequest salesRequest) throws SQLException;
     boolean delete(int requestId) throws SQLException;
     boolean updateStatus(Connection connection, int requestId, SalesRequestStatus status) throws SQLException;
+    boolean updateStatus(int requestId, SalesRequestStatus status) throws SQLException;
+    boolean updateStatusIfCurrent(int requestId, SalesRequestStatus expectedStatus, SalesRequestStatus newStatus) throws SQLException;
 }

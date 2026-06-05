@@ -12,7 +12,6 @@ public final class SalesView extends MainView {
         setSidebar(createSidebar(List.of(
                 section("Quản lý yêu cầu nhập hàng",
                         item("Danh sách yêu cầu đã tạo", "/com/oims/features/sales_requests/list-sales-request-view.fxml", ()->true),
-                        item("Xem chi tiết yêu cầu", "/com/oims/features/sales_requests/detail-sales-request-view.fxml", this::check_session_req),
                         item("Tạo yêu cầu mới", "/com/oims/features/sales_requests/create-sales-request-view.fxml", () -> true)
                 ),
                 section("Quản lý mặt hàng",
@@ -23,14 +22,6 @@ public final class SalesView extends MainView {
     }
 
     private final AlertMessage alertMessage = new AlertMessage();
-
-    boolean check_session_req(){
-        if (AppSession.getInstance().getSelectedRequestId()==null){
-            alertMessage.errorMessage("Chưa có yêu cầu nào được chọn! Hãy chọn 1 yêu cầu từ danh sách.");
-            return false;
-        }
-        return true;
-    }
 
     boolean check_session_merch(){
         if (AppSession.getInstance().getSelectedMerchandiseId()==null){

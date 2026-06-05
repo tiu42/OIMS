@@ -10,11 +10,12 @@ import com.oims.core.model.SalesRequestItem;
 import com.oims.core.model.SalesRequestStatus;
 import com.oims.core.model.User;
 import com.oims.core.model.UserRole;
-import com.oims.features.sales_requests.create.CreateRequestController.TempRequestItem;
+import com.oims.features.sales_requests.dto.RequestItemDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +29,53 @@ class EditRequestControllerTest {
     private FakeSalesRequestDao salesRequestDao;
     private FakeSalesRequestItemDao salesRequestItemDao;
     private EditRequestController controller;
+    private static List<java.sql.Driver> originalDrivers = new ArrayList<>();
+    private static MockDriver mockDriver;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
         salesRequestDao = new FakeSalesRequestDao();
         salesRequestItemDao = new FakeSalesRequestItemDao();
-        controller = new EditRequestController(
+
+        IEditRequestService editRequestService = new EditRequestService(
                 new FakeMerchandiseDao(),
                 salesRequestDao,
                 salesRequestItemDao,
-                new FakeUserDao()
+                new FakeUserDao(),
+                new DefaultSalesRequestEditPolicy()
         );
+
+        controller = new EditRequestController(
+                editRequestService,
+                new DefaultSalesRequestEditPolicy()
+        );
+
+        Connection mockConnection = (Connection) java.lang.reflect.Proxy.newProxyInstance(
+                Connection.class.getClassLoader(),
+                new Class<?>[]{Connection.class},
+                (proxy, method, args) -> null
+        );
+
+        java.util.Enumeration<java.sql.Driver> drivers = java.sql.DriverManager.getDrivers();
+        originalDrivers.clear();
+        while (drivers.hasMoreElements()) {
+            java.sql.Driver d = drivers.nextElement();
+            originalDrivers.add(d);
+            java.sql.DriverManager.deregisterDriver(d);
+        }
+
+        mockDriver = new MockDriver(mockConnection);
+        java.sql.DriverManager.registerDriver(mockDriver);
+    }
+
+    @org.junit.jupiter.api.AfterEach
+    void tearDown() throws SQLException {
+        if (mockDriver != null) {
+            java.sql.DriverManager.deregisterDriver(mockDriver);
+        }
+        for (java.sql.Driver d : originalDrivers) {
+            java.sql.DriverManager.registerDriver(d);
+        }
     }
 
     @Test
@@ -47,8 +84,8 @@ class EditRequestControllerTest {
         salesRequestItemDao.items.add(createItem(101, 1, "OLD", 1));
 
         controller.updateSalesRequest(1, createUser(10), List.of(
-                new TempRequestItem("M001", 5, "pcs", LocalDate.now().plusDays(3)),
-                new TempRequestItem("M002", 8, "box", LocalDate.now().plusDays(4))
+                new RequestItemDTO("M001", 5, "pcs", LocalDate.now().plusDays(3)),
+                new RequestItemDTO("M002", 8, "box", LocalDate.now().plusDays(4))
         ));
 
         assertTrue(salesRequestItemDao.deleteByRequestIdCalled);
@@ -61,7 +98,7 @@ class EditRequestControllerTest {
     void updateSalesRequestRejectsMissingModifier() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.updateSalesRequest(1, null, List.of(
-                        new TempRequestItem("M001", 5, "pcs", LocalDate.now().plusDays(3))
+                        new RequestItemDTO("M001", 5, "pcs", LocalDate.now().plusDays(3))
                 ))
         );
 
@@ -74,7 +111,7 @@ class EditRequestControllerTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.updateSalesRequest(404, createUser(10), List.of(
-                        new TempRequestItem("M001", 5, "pcs", LocalDate.now().plusDays(3))
+                        new RequestItemDTO("M001", 5, "pcs", LocalDate.now().plusDays(3))
                 ))
         );
 
@@ -87,11 +124,11 @@ class EditRequestControllerTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.updateSalesRequest(1, createUser(10), List.of(
-                        new TempRequestItem("M001", 5, "pcs", LocalDate.now().plusDays(3))
+                        new RequestItemDTO("M001", 5, "pcs", LocalDate.now().plusDays(3))
                 ))
         );
 
-        assertEquals("Chỉ có thể chỉnh sửa yêu cầu ở trạng thái Chờ xử lý.", exception.getMessage());
+        assertEquals("Yêu cầu đã được xử lý xong. Không thể chỉnh sửa.", exception.getMessage());
     }
 
     @Test
@@ -100,7 +137,7 @@ class EditRequestControllerTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 controller.updateSalesRequest(1, createUser(10), List.of(
-                        new TempRequestItem("M001", 5, "pcs", LocalDate.now().minusDays(1))
+                        new RequestItemDTO("M001", 5, "pcs", LocalDate.now().minusDays(1))
                 ))
         );
 
@@ -195,6 +232,16 @@ class EditRequestControllerTest {
             request.setStatus(status);
             return true;
         }
+
+        @Override
+        public boolean updateStatus(int requestId, SalesRequestStatus status) {
+            return true;
+        }
+
+        @Override
+        public boolean updateStatusIfCurrent(int requestId, SalesRequestStatus expectedStatus, SalesRequestStatus newStatus) {
+            return true;
+        }
     }
 
     private static class FakeSalesRequestItemDao implements ISalesRequestItemDao {
@@ -227,6 +274,11 @@ class EditRequestControllerTest {
         }
 
         @Override
+        public int insert(Connection connection, SalesRequestItem item) {
+            return insert(item);
+        }
+
+        @Override
         public boolean update(SalesRequestItem item) {
             return true;
         }
@@ -240,6 +292,11 @@ class EditRequestControllerTest {
         public void deleteByRequestId(int requestId) {
             deleteByRequestIdCalled = true;
             items.removeIf(item -> item.getRequestId() == requestId);
+        }
+
+        @Override
+        public void deleteByRequestId(Connection connection, int requestId) {
+            deleteByRequestId(requestId);
         }
     }
 
@@ -272,6 +329,52 @@ class EditRequestControllerTest {
         @Override
         public boolean delete(int userId) {
             return true;
+        }
+    }
+
+    private static class MockDriver implements java.sql.Driver {
+        private final Connection mockConnection;
+
+        public MockDriver(Connection mockConnection) {
+            this.mockConnection = mockConnection;
+        }
+
+        @Override
+        public Connection connect(String url, java.util.Properties info) throws SQLException {
+            if (url.startsWith("jdbc:mysql://localhost:3306/glocerimex")) {
+                return mockConnection;
+            }
+            return null;
+        }
+
+        @Override
+        public boolean acceptsURL(String url) throws SQLException {
+            return url.startsWith("jdbc:mysql://localhost:3306/glocerimex");
+        }
+
+        @Override
+        public java.sql.DriverPropertyInfo[] getPropertyInfo(String url, java.util.Properties info) throws SQLException {
+            return new java.sql.DriverPropertyInfo[0];
+        }
+
+        @Override
+        public int getMajorVersion() {
+            return 1;
+        }
+
+        @Override
+        public int getMinorVersion() {
+            return 0;
+        }
+
+        @Override
+        public boolean jdbcCompliant() {
+            return true;
+        }
+
+        @Override
+        public java.util.logging.Logger getParentLogger() throws java.sql.SQLFeatureNotSupportedException {
+            throw new java.sql.SQLFeatureNotSupportedException();
         }
     }
 }

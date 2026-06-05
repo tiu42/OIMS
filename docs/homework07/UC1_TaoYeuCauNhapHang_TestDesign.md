@@ -4,7 +4,7 @@
 
 - **Use case:** Tạo yêu cầu nhập hàng
 - **Lớp được kiểm thử:** `com.oims.features.sales_requests.create.CreateRequestController`
-- **Phương thức được kiểm thử:** `saveSalesRequest(User creator, List<TempRequestItem> tempItems)`
+- **Phương thức được kiểm thử:** `saveSalesRequest(User creator, List<RequestItemDTO> items)`
 - **Lớp JUnit tự động:** `com.oims.features.sales_requests.create.CreateRequestControllerTest`
 - **Framework:** JUnit 5
 
