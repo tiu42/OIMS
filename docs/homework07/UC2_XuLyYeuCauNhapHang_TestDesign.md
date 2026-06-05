@@ -3,9 +3,9 @@
 ## 1. Thông tin module kiểm thử
 
 - **Use case:** Xử lý yêu cầu nhập hàng
-- **Lớp được kiểm thử:** `com.oims.features.sales_requests.process.PlanGenerationService`
+- **Lớp được kiểm thử:** `com.oims.features.sales_requests.process.service.PlanGenerationService`
 - **Phương thức được kiểm thử:** `generatePlans(List<ItemDemand>, Map<String, ItemConfig>, Map<String, List<SiteStockTransportDTO>>)`
-- **Lớp JUnit tự động:** `com.oims.features.sales_requests.process.PlanGenerationServiceTest`
+- **Lớp JUnit tự động:** `com.oims.features.sales_requests.process.service.PlanGenerationServiceTest`
 - **Framework:** JUnit 5
 
 ## 2. Mô tả phương thức
@@ -64,7 +64,7 @@ Phương thức sinh các phương án đặt hàng dựa trên nhu cầu mặt 
 
 ## 5. Bảng các ca kiểm thử tự động
 
-**Tên đầy đủ của Class kiểm thử tự động:** `com.oims.features.sales_requests.process.PlanGenerationServiceTest`
+**Tên đầy đủ của Class kiểm thử tự động:** `com.oims.features.sales_requests.process.service.PlanGenerationServiceTest`
 
 | Mã TC | Mục tiêu | Đầu vào | Kết quả mong đợi | Phương thức JUnit |
 | --- | --- | --- | --- | --- |

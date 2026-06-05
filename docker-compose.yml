@@ -3,8 +3,8 @@ services:
     image: mysql:8.0
     container_name: oims-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: quangminh061104
-      MYSQL_DATABASE: glocerimex
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     ports:
       - "3306:3306"
     volumes:
@@ -12,7 +12,7 @@ services:
       - ./src/main/java/com/oims/core/database/db_init.sql:/docker-entrypoint-initdb.d/01-db_init.sql:ro
       - ./src/main/java/com/oims/core/database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pquangminh061104"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 12

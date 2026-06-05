@@ -6,9 +6,8 @@ import com.oims.features.sales_requests.process.dto.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlanEvaluationService implements IPlanEvaluationService {
+public class PlanEvaluationService {
 
-    @Override
     public PlanDTO evaluate(
             int planId, 
             List<ItemAllocationOption> combination, 

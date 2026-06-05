@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class PlanGenerationService implements IPlanGenerationService {
     private final IImportSiteDao importSiteDao;
     private final PlanSortingStrategy sortingStrategy;
-    private final IItemAllocationService allocationService;
-    private final IPlanEvaluationService evaluationService;
+    private final ItemAllocationService allocationService;
+    private final PlanEvaluationService evaluationService;
 
     public PlanGenerationService() {
         this.importSiteDao = DaoFactory.getImportSiteDao();
@@ -35,8 +35,8 @@ public class PlanGenerationService implements IPlanGenerationService {
 
     public PlanGenerationService(IImportSiteDao importSiteDao, 
                                  PlanSortingStrategy sortingStrategy,
-                                 IItemAllocationService allocationService,
-                                 IPlanEvaluationService evaluationService) {
+                                 ItemAllocationService allocationService,
+                                 PlanEvaluationService evaluationService) {
         this.importSiteDao = importSiteDao;
         this.sortingStrategy = sortingStrategy;
         this.allocationService = allocationService;

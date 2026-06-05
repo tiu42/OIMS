@@ -328,6 +328,13 @@ public class ProcessRequestView implements Initializable {
         if (demandsList.isEmpty()) return;
 
         try {
+            // Ensure site stocks are loaded/cached for all demands
+            for (ItemDemand d : demandsList) {
+                if (!cachedSiteStocks.containsKey(d.merchandiseCode())) {
+                    cachedSiteStocks.put(d.merchandiseCode(), controller.getSiteStockAndTransport(d.merchandiseCode()));
+                }
+            }
+
             // Check for insufficient or missing site stock for each item
             List<ItemDemand> failed = controller.getFailedDemands(demandsList);
             

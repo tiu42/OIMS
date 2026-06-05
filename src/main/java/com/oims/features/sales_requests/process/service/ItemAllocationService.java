@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemAllocationService implements IItemAllocationService {
+public class ItemAllocationService {
 
-    @Override
     public List<ItemAllocationOption> generateOptions(
             String merchCode, String merchName, String unit, int demand, 
             List<SiteStockTransportDTO> siteStockList, ItemConfig config) {
