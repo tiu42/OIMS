@@ -1,4 +1,4 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.dto;
 
 public record ProcessedErrorDTO(
     String merchandiseCode,

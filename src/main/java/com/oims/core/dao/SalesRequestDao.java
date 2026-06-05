@@ -120,4 +120,9 @@ public class SalesRequestDao extends BaseJdbcDao implements ISalesRequestDao {
                 SalesRequestStatus.fromDbValue(resultSet.getString("status"))
         );
     }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return connection();
+    }
 }

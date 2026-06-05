@@ -1,4 +1,4 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.dto;
 
 import com.oims.core.model.DeliveryMeans;
 import java.util.List;

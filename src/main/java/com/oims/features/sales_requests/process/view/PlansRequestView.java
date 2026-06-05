@@ -1,11 +1,11 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.view;
 
 import com.oims.core.model.DeliveryMeans;
-import com.oims.core.model.SalesRequest;
 import com.oims.core.model.User;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
-import com.oims.features.sales_requests.process.ProcessRequestController.*;
+import com.oims.features.sales_requests.process.controller.ProcessRequestController;
+import com.oims.features.sales_requests.process.dto.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -124,30 +124,24 @@ public class PlansRequestView implements Initializable {
 
     private void loadRequestData() {
         try {
-            Optional<SalesRequest> requestOpt = controller.getSalesRequest(requestId);
+            Optional<SalesRequestDTO> requestOpt = controller.getSalesRequest(requestId);
             if (requestOpt.isEmpty()) {
                 alertMessage.errorMessage("Yêu cầu nhập hàng không tồn tại.");
                 navigateBackToDetail();
                 return;
             }
 
-            SalesRequest request = requestOpt.get();
-            requestIdLabel.setText(String.valueOf(request.getRequestId()));
-            creatorNameLabel.setText(controller.getCreatorName(request.getCreatedBy()));
-            creationDateLabel.setText(request.getCreatedDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            String statusText = switch (request.getStatus()) {
-                case PENDING -> "Chờ xử lý";
-                case PROCESSING -> "Đang xử lý";
-                case COMPLETED -> "Hoàn tất";
-                case ERROR -> "Lỗi";
-            };
-            statusLabel.setText(statusText);
+            SalesRequestDTO request = requestOpt.get();
+            requestIdLabel.setText(String.valueOf(request.requestId()));
+            creatorNameLabel.setText(controller.getCreatorName(request.createdBy()));
+            creationDateLabel.setText(request.createdDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            statusLabel.setText(request.statusText());
             statusLabel.getStyleClass().removeAll("status-pending", "status-processing", "status-completed", "status-error");
-            switch (request.getStatus()) {
-                case PENDING -> statusLabel.getStyleClass().add("status-pending");
-                case PROCESSING -> statusLabel.getStyleClass().add("status-processing");
-                case COMPLETED -> statusLabel.getStyleClass().add("status-completed");
-                case ERROR -> statusLabel.getStyleClass().add("status-error");
+            switch (request.statusText()) {
+                case "Chờ xử lý" -> statusLabel.getStyleClass().add("status-pending");
+                case "Đang xử lý" -> statusLabel.getStyleClass().add("status-processing");
+                case "Hoàn tất" -> statusLabel.getStyleClass().add("status-completed");
+                case "Lỗi" -> statusLabel.getStyleClass().add("status-error");
             }
 
         } catch (SQLException e) {
@@ -211,7 +205,7 @@ public class PlansRequestView implements Initializable {
         if (!confirm) return;
 
         try {
-            controller.savePlan(requestId, currentUser, selectedPlan, hasErrors);
+            controller.savePlan(requestId, currentUser.getUserId(), selectedPlan, hasErrors);
             alertMessage.successMessage("Xử lý yêu cầu và lập đơn hàng thành công!");
             navigateBackToDetail();
         } catch (SQLException e) {

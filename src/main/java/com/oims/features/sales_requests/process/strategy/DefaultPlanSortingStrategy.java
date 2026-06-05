@@ -1,5 +1,6 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.strategy;
 
+import com.oims.features.sales_requests.process.dto.PlanDTO;
 import java.util.List;
 
 public class DefaultPlanSortingStrategy implements PlanSortingStrategy {
