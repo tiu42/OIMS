@@ -50,8 +50,14 @@ public class SalesRequestItemDao extends BaseJdbcDao implements ISalesRequestIte
     }
 
     public int insert(SalesRequestItem item) throws SQLException {
+        try (Connection connection = connection()) {
+            return insert(connection, item);
+        }
+    }
+
+    public int insert(Connection connection, SalesRequestItem item) throws SQLException {
         String sql = "INSERT INTO SalesRequestItem (request_id, merchandise_code, quantity_ordered, unit, desired_delivery_date) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = connection(); PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, item.getRequestId());
             statement.setString(2, item.getMerchandiseCode());
             statement.setInt(3, item.getQuantityOrdered());
@@ -91,8 +97,14 @@ public class SalesRequestItemDao extends BaseJdbcDao implements ISalesRequestIte
     }
 
     public void deleteByRequestId(int requestId) throws SQLException {
+        try (Connection connection = connection()) {
+            deleteByRequestId(connection, requestId);
+        }
+    }
+
+    public void deleteByRequestId(Connection connection, int requestId) throws SQLException {
         String sql = "DELETE FROM SalesRequestItem WHERE request_id = ?";
-        try (Connection connection = connection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, requestId);
             statement.executeUpdate();
         }

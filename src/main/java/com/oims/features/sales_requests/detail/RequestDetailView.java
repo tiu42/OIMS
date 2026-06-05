@@ -6,8 +6,7 @@ import com.oims.core.model.UserRole;
 import com.oims.core.model.SalesRequestStatus;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
-import com.oims.features.sales_requests.list.RequestListMode;
-import com.oims.features.sales_requests.list.RequestListRow;
+import com.oims.features.sales_requests.edit.EditPermissionResult;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,8 +22,6 @@ import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -45,6 +42,7 @@ public class RequestDetailView implements Initializable {
     public Button viewProcessResultBtn;
 
     private final RequestDetailController controller = new RequestDetailController();
+    private final AlertMessage alertMessage = new AlertMessage();
     private ObservableList<RequestItemTableRow> salesRequestItemList = FXCollections.observableArrayList();
 
     @Override
@@ -104,7 +102,7 @@ public class RequestDetailView implements Initializable {
         viewProcessResultBtn.setDisable(!isProcessed);
 
         // Disable nút chỉnh sửa yêu cầu & hủy yêu cầu nếu yêu cầu đó đã/đang được xử lý (trạng thái khác PENDING)
-        boolean canEditOrCancel = (status == SalesRequestStatus.PENDING);
+        boolean canEditOrCancel = controller.canEditRequest();
         updateRequestBtn.setDisable(!canEditOrCancel);
         deleteRequestBtn.setDisable(!canEditOrCancel);
 
@@ -157,13 +155,23 @@ public class RequestDetailView implements Initializable {
 
     private void handleUpdateRequest() {
         try {
+            EditPermissionResult permission = controller.checkEditPermission();
+            if (!permission.canEdit()) {
+                alertMessage.errorMessage(permission.blockedMessage());
+                configureStaticContent();
+                configureButtonPermissions();
+                return;
+            }
+
             Parent view = FXMLLoader.load(getClass().getResource("/com/oims/features/sales_requests/edit-sales-request-view.fxml"));
             StackPane contentArea = (StackPane) requestIdLabel.getScene().lookup("#contentArea");
             if (contentArea != null) {
                 contentArea.getChildren().setAll(view);
             }
+        } catch (SQLException e) {
+            alertMessage.errorMessage("Không thể kiểm tra trạng thái yêu cầu: " + e.getMessage());
         } catch (IOException e) {
-            new AlertMessage().errorMessage("Không thể mở màn hình chỉnh sửa: " + e.getMessage());
+            alertMessage.errorMessage("Không thể mở màn hình chỉnh sửa: " + e.getMessage());
         }
     }
 

@@ -3,19 +3,24 @@ package com.oims.features.sales_requests.edit;
 import com.oims.core.model.Merchandise;
 import com.oims.core.model.SalesRequest;
 import com.oims.core.model.SalesRequestItem;
+import com.oims.core.model.SalesRequestStatus;
 import com.oims.core.model.User;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
-import com.oims.features.sales_requests.create.CreateRequestController.TempRequestItem;
+import com.oims.features.sales_requests.dto.RequestItemDTO;
+import com.oims.features.sales_requests.shared.RequestItemValidator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -45,6 +50,9 @@ public class EditRequestView implements Initializable {
 
     @FXML
     private Label statusLabel;
+
+    @FXML
+    private Label lockWarningLabel;
 
     @FXML
     private ComboBox<Merchandise> merchComboBox;
@@ -92,6 +100,9 @@ public class EditRequestView implements Initializable {
     private final ObservableList<DisplayRow> addedItemsList = FXCollections.observableArrayList();
     private final AlertMessage alertMessage = new AlertMessage();
     private Integer requestId;
+    private Timeline statusCheckTimeline;
+    private boolean editLocked;
+    private boolean lockMessageShown;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,47 +113,41 @@ public class EditRequestView implements Initializable {
             return;
         }
 
-        initMetadataAndTableData();
-        initMerchComboBox();
+        if (!loadFormData()) {
+            return;
+        }
+
         initTableColumns();
         initEventHandlers();
 
         addedItemsTable.setItems(addedItemsList);
         desiredDatePicker.setValue(LocalDate.now());
+        startStatusPolling();
     }
 
-    private void initMetadataAndTableData() {
+    private boolean loadFormData() {
         try {
-            // Load SalesRequest
-            var requestOpt = controller.getSalesRequest(requestId);
-            if (requestOpt.isEmpty()) {
+            var formDataOpt = controller.loadEditFormData(requestId);
+            if (formDataOpt.isEmpty()) {
                 alertMessage.errorMessage("Yêu cầu nhập hàng không tồn tại hoặc đã bị xóa.");
                 navigateBackToDetail();
-                return;
+                return false;
             }
 
-            SalesRequest request = requestOpt.get();
+            EditFormData formData = formDataOpt.get();
+            SalesRequest request = formData.salesRequest();
+
             requestIdLabel.setText(String.valueOf(request.getRequestId()));
-            creatorNameLabel.setText(controller.getCreatorName(request.getCreatedBy()));
+            creatorNameLabel.setText(formData.creatorName());
             creationDateLabel.setText(request.getCreatedDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            
-            // Format status label
-            if (request.getStatus() != null) {
-                statusLabel.setText(switch (request.getStatus()) {
-                    case PENDING -> "Chờ xử lý";
-                    case PROCESSING -> "Đang xử lý";
-                    case COMPLETED -> "Hoàn tất";
-                    case ERROR -> "Lỗi";
-                });
-            }
+            applyEditAvailability(request.getStatus(), false);
 
-            // Load SalesRequestItems and populate addedItemsList
-            List<SalesRequestItem> items = controller.getSalesRequestItems(requestId);
-            List<Merchandise> merchandises = controller.getAllMerchandises();
-            Map<String, String> merchNameMap = merchandises.stream()
+            initMerchComboBox(formData.merchandises());
+
+            Map<String, String> merchNameMap = formData.merchandises().stream()
                     .collect(Collectors.toMap(Merchandise::getMerchandiseCode, Merchandise::getMerchandiseName));
 
-            for (SalesRequestItem item : items) {
+            for (SalesRequestItem item : formData.items()) {
                 String name = merchNameMap.getOrDefault(item.getMerchandiseCode(), "Không xác định");
                 addedItemsList.add(new DisplayRow(
                         item.getMerchandiseCode(),
@@ -153,42 +158,36 @@ public class EditRequestView implements Initializable {
                 ));
             }
 
+            return true;
         } catch (SQLException e) {
             alertMessage.errorMessage("Không thể tải thông tin yêu cầu: " + e.getMessage());
             navigateBackToDetail();
+            return false;
         }
     }
 
-    private void initMerchComboBox() {
-        try {
-            List<Merchandise> merchandises = controller.getAllMerchandises();
-            merchComboBox.setItems(FXCollections.observableArrayList(merchandises));
+    private void initMerchComboBox(List<Merchandise> merchandises) {
+        merchComboBox.setItems(FXCollections.observableArrayList(merchandises));
 
-            // Set how items are displayed
-            merchComboBox.setConverter(new StringConverter<Merchandise>() {
-                @Override
-                public String toString(Merchandise object) {
-                    return object == null ? "" : object.getMerchandiseCode() + " - " + object.getMerchandiseName();
-                }
+        merchComboBox.setConverter(new StringConverter<Merchandise>() {
+            @Override
+            public String toString(Merchandise object) {
+                return object == null ? "" : object.getMerchandiseCode() + " - " + object.getMerchandiseName();
+            }
 
-                @Override
-                public Merchandise fromString(String string) {
-                    return null;
-                }
-            });
+            @Override
+            public Merchandise fromString(String string) {
+                return null;
+            }
+        });
 
-            // When merchandise is selected, pre-fill unit field
-            merchComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal != null) {
-                    unitField.setText(newVal.getDefaultUnit());
-                } else {
-                    unitField.clear();
-                }
-            });
-
-        } catch (SQLException e) {
-            alertMessage.errorMessage("Không thể tải danh sách mặt hàng: " + e.getMessage());
-        }
+        merchComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                unitField.setText(newVal.getDefaultUnit());
+            } else {
+                unitField.clear();
+            }
+        });
     }
 
     private void initTableColumns() {
@@ -227,7 +226,103 @@ public class EditRequestView implements Initializable {
         cancelBtn.setOnAction(event -> handleCancel());
     }
 
+    private void startStatusPolling() {
+        statusCheckTimeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> refreshEditAvailability()));
+        statusCheckTimeline.setCycleCount(Timeline.INDEFINITE);
+        statusCheckTimeline.play();
+    }
+
+    private void stopStatusPolling() {
+        if (statusCheckTimeline != null) {
+            statusCheckTimeline.stop();
+        }
+    }
+
+    private void refreshEditAvailability() {
+        try {
+            EditPermissionResult permission = controller.checkEditPermission(requestId);
+            if (permission.status() == null) {
+                return;
+            }
+            applyEditAvailability(permission.status(), true);
+        } catch (SQLException ignored) {
+            // Giữ trạng thái hiện tại nếu tạm thời không đọc được DB.
+        }
+    }
+
+    private void applyEditAvailability(SalesRequestStatus status, boolean notifyOnLock) {
+        updateStatusLabel(status);
+
+        if (controller.isEditable(status)) {
+            editLocked = false;
+            lockMessageShown = false;
+            setEditControlsDisabled(false);
+            if (lockWarningLabel != null) {
+                lockWarningLabel.setText("");
+                lockWarningLabel.setVisible(false);
+                lockWarningLabel.setManaged(false);
+            }
+            return;
+        }
+
+        editLocked = true;
+        setEditControlsDisabled(true);
+
+        String message = controller.getBlockedMessage(status);
+        if (lockWarningLabel != null) {
+            lockWarningLabel.setText(message);
+            lockWarningLabel.setVisible(true);
+            lockWarningLabel.setManaged(true);
+        }
+
+        if (notifyOnLock && !lockMessageShown) {
+            lockMessageShown = true;
+            alertMessage.errorMessage(message);
+        }
+    }
+
+    private void updateStatusLabel(SalesRequestStatus status) {
+        if (status == null || statusLabel == null) {
+            return;
+        }
+        statusLabel.setText(switch (status) {
+            case PENDING -> "Chờ xử lý";
+            case PROCESSING -> "Đang xử lý";
+            case COMPLETED -> "Hoàn tất";
+            case ERROR -> "Lỗi";
+        });
+    }
+
+    private void setEditControlsDisabled(boolean disabled) {
+        if (addItemBtn != null) {
+            addItemBtn.setDisable(disabled);
+        }
+        if (submitBtn != null) {
+            submitBtn.setDisable(disabled);
+        }
+        if (merchComboBox != null) {
+            merchComboBox.setDisable(disabled);
+        }
+        if (quantityField != null) {
+            quantityField.setDisable(disabled);
+        }
+        if (unitField != null) {
+            unitField.setDisable(disabled);
+        }
+        if (desiredDatePicker != null) {
+            desiredDatePicker.setDisable(disabled);
+        }
+        if (addedItemsTable != null) {
+            addedItemsTable.setDisable(disabled);
+        }
+    }
+
     private void handleAddItem() {
+        if (editLocked) {
+            alertMessage.errorMessage("Yêu cầu không còn ở trạng thái có thể chỉnh sửa.");
+            return;
+        }
+
         Merchandise selectedMerch = merchComboBox.getValue();
         String qtyText = quantityField.getText();
         String unit = unitField.getText();
@@ -250,18 +345,15 @@ public class EditRequestView implements Initializable {
             return;
         }
 
-        if (unit == null || unit.isBlank()) {
-            alertMessage.errorMessage("Đơn vị mặt hàng không được để trống.");
-            return;
-        }
-
-        if (date == null) {
-            alertMessage.errorMessage("Vui lòng chọn ngày nhận mong muốn.");
-            return;
-        }
-
-        if (date.isBefore(LocalDate.now())) {
-            alertMessage.errorMessage("Ngày nhận mong muốn không được ở trong quá khứ.");
+        try {
+            RequestItemValidator.validateItem(new RequestItemDTO(
+                    selectedMerch.getMerchandiseCode(),
+                    qty,
+                    unit,
+                    date
+            ));
+        } catch (IllegalArgumentException e) {
+            alertMessage.errorMessage(e.getMessage());
             return;
         }
 
@@ -288,15 +380,20 @@ public class EditRequestView implements Initializable {
     }
 
     private void handleSubmitChanges() {
+        if (editLocked) {
+            alertMessage.errorMessage("Yêu cầu không còn ở trạng thái có thể chỉnh sửa.");
+            return;
+        }
+
         if (addedItemsList.isEmpty()) {
             alertMessage.errorMessage("Danh sách mặt hàng yêu cầu không được để trống.");
             return;
         }
 
         User currentUser = AppSession.getInstance().getCurrentUser();
-        List<TempRequestItem> tempItems = new ArrayList<>();
+        List<RequestItemDTO> items = new ArrayList<>();
         for (DisplayRow row : addedItemsList) {
-            tempItems.add(new TempRequestItem(
+            items.add(new RequestItemDTO(
                     row.getCode(),
                     row.getQuantity(),
                     row.getUnit(),
@@ -305,7 +402,7 @@ public class EditRequestView implements Initializable {
         }
 
         try {
-            controller.updateSalesRequest(requestId, currentUser, tempItems);
+            controller.updateSalesRequest(requestId, currentUser, items);
             alertMessage.successMessage("Cập nhật yêu cầu nhập hàng thành công.");
             navigateBackToDetail();
         } catch (SQLException | IllegalArgumentException e) {
@@ -318,6 +415,7 @@ public class EditRequestView implements Initializable {
     }
 
     private void navigateBackToDetail() {
+        stopStatusPolling();
         try {
             Parent view = FXMLLoader.load(getClass().getResource("/com/oims/features/sales_requests/detail-sales-request-view.fxml"));
             StackPane contentArea = (StackPane) pageTitle.getScene().lookup("#contentArea");

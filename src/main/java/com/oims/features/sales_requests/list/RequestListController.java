@@ -11,9 +11,13 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -114,6 +118,7 @@ public class RequestListController implements Initializable {
 
         configureStaticContent();
         configureColumns();
+        configureRowDoubleClick();
         configurePaginationControls();
         configureFilters();
 
@@ -190,6 +195,39 @@ public class RequestListController implements Initializable {
         creatorColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().creatorName()));
         createdDateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCreatedDateDisplay()));
         statusColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getStatusLabel()));
+    }
+
+    private void configureRowDoubleClick() {
+        importRequestTable.setRowFactory(table -> {
+            TableRow<RequestListRow> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (row.isEmpty() || event.getClickCount() != 2) {
+                    return;
+                }
+                openRequestDetail(row.getItem());
+            });
+            return row;
+        });
+    }
+
+    private void openRequestDetail(RequestListRow row) {
+        if (row == null || row.getRequestId() == null) {
+            return;
+        }
+
+        AppSession.getInstance().setSelectedRequestId(row.getRequestId());
+        importRequestTable.getSelectionModel().select(row);
+        importRequestTable.refresh();
+
+        try {
+            Parent view = FXMLLoader.load(getClass().getResource("/com/oims/features/sales_requests/detail-sales-request-view.fxml"));
+            StackPane contentArea = (StackPane) importRequestTable.getScene().lookup("#contentArea");
+            if (contentArea != null) {
+                contentArea.getChildren().setAll(view);
+            }
+        } catch (IOException e) {
+            alertMessage.errorMessage("Không thể mở màn hình chi tiết yêu cầu: " + e.getMessage());
+        }
     }
 
     private void configurePaginationControls() {

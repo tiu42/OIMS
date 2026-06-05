@@ -96,6 +96,22 @@ public class SalesRequestDao extends BaseJdbcDao implements ISalesRequestDao {
         }
     }
 
+    public boolean updateStatus(int requestId, SalesRequestStatus status) throws SQLException {
+        try (Connection connection = connection()) {
+            return updateStatus(connection, requestId, status);
+        }
+    }
+
+    public boolean updateStatusIfCurrent(int requestId, SalesRequestStatus expectedStatus, SalesRequestStatus newStatus) throws SQLException {
+        String sql = "UPDATE SalesRequest SET status = ? WHERE request_id = ? AND status = ?";
+        try (Connection connection = connection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, newStatus.getDbValue());
+            statement.setInt(2, requestId);
+            statement.setString(3, expectedStatus.getDbValue());
+            return statement.executeUpdate() > 0;
+        }
+    }
+
     private SalesRequest map(ResultSet resultSet) throws SQLException {
         return new SalesRequest(
                 resultSet.getInt("request_id"),

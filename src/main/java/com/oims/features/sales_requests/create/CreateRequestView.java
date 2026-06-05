@@ -239,9 +239,9 @@ public class CreateRequestView implements Initializable {
         }
 
         User currentUser = AppSession.getInstance().getCurrentUser();
-        List<CreateRequestController.TempRequestItem> tempItems = new ArrayList<>();
+        List<com.oims.features.sales_requests.dto.RequestItemDTO> items = new ArrayList<>();
         for (DisplayRow row : addedItemsList) {
-            tempItems.add(new CreateRequestController.TempRequestItem(
+            items.add(new com.oims.features.sales_requests.dto.RequestItemDTO(
                     row.getCode(),
                     row.getQuantity(),
                     row.getUnit(),
@@ -250,7 +250,7 @@ public class CreateRequestView implements Initializable {
         }
 
         try {
-            controller.saveSalesRequest(currentUser, tempItems);
+            controller.saveSalesRequest(currentUser, items);
             alertMessage.successMessage("Tạo yêu cầu nhập hàng mới thành công.");
             navigateBackToList();
         } catch (SQLException | IllegalArgumentException e) {
