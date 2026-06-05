@@ -1,8 +1,5 @@
 package com.oims.core.model;
 
-import com.oims.core.dao.UserDao;
-
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -92,32 +89,5 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public static Optional<User> authenticate(String username, String password, String roleLabel) {
-        UserRole role = resolveRole(roleLabel);
-        if (role == null || username == null || password == null) {
-            return Optional.empty();
-        }
-
-        try {
-            return new UserDao().findByCredentials(username.trim(), password, role);
-        } catch (SQLException exception) {
-            throw new RuntimeException("Không thể kiểm tra thông tin đăng nhập", exception);
-        }
-    }
-
-    private static UserRole resolveRole(String roleLabel) {
-        if (roleLabel == null) {
-            return null;
-        }
-
-        return switch (roleLabel.trim()) {
-            case "Admin" -> UserRole.ADMIN;
-            case "NV.BP.Bán hàng" -> UserRole.SALES;
-            case "NV.BP.Đặt hàng" -> UserRole.OVERSEAS_ORDER;
-            case "NV.BP.Quản lý kho" -> UserRole.WAREHOUSE;
-            default -> null;
-        };
     }
 }

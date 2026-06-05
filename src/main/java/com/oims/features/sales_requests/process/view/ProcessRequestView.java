@@ -1,14 +1,10 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.view;
 
 import com.oims.core.model.DeliveryMeans;
-import com.oims.core.model.Merchandise;
-import com.oims.core.model.SalesRequest;
-import com.oims.core.model.SalesRequestItem;
-import com.oims.core.model.User;
-import com.oims.core.dao.MerchandiseDao;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
-import com.oims.features.sales_requests.process.ProcessRequestController.*;
+import com.oims.features.sales_requests.process.controller.ProcessRequestController;
+import com.oims.features.sales_requests.process.dto.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -161,48 +157,29 @@ public class ProcessRequestView implements Initializable {
 
     private void loadRequestData() {
         try {
-            Optional<SalesRequest> requestOpt = controller.getSalesRequest(requestId);
+            Optional<SalesRequestDTO> requestOpt = controller.getSalesRequest(requestId);
             if (requestOpt.isEmpty()) {
                 alertMessage.errorMessage("Yêu cầu nhập hàng không tồn tại.");
                 navigateBackToDetail();
                 return;
             }
 
-            SalesRequest request = requestOpt.get();
-            requestIdLabel.setText(String.valueOf(request.getRequestId()));
-            creatorNameLabel.setText(controller.getCreatorName(request.getCreatedBy()));
-            creationDateLabel.setText(request.getCreatedDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            String statusText = switch (request.getStatus()) {
-                case PENDING -> "Chờ xử lý";
-                case PROCESSING -> "Đang xử lý";
-                case COMPLETED -> "Hoàn tất";
-                case ERROR -> "Lỗi";
-            };
-            statusLabel.setText(statusText);
+            SalesRequestDTO request = requestOpt.get();
+            requestIdLabel.setText(String.valueOf(request.requestId()));
+            creatorNameLabel.setText(controller.getCreatorName(request.createdBy()));
+            creationDateLabel.setText(request.createdDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            statusLabel.setText(request.statusText());
             statusLabel.getStyleClass().removeAll("status-pending", "status-processing", "status-completed", "status-error");
-            switch (request.getStatus()) {
-                case PENDING -> statusLabel.getStyleClass().add("status-pending");
-                case PROCESSING -> statusLabel.getStyleClass().add("status-processing");
-                case COMPLETED -> statusLabel.getStyleClass().add("status-completed");
-                case ERROR -> statusLabel.getStyleClass().add("status-error");
+            switch (request.statusText()) {
+                case "Chờ xử lý" -> statusLabel.getStyleClass().add("status-pending");
+                case "Đang xử lý" -> statusLabel.getStyleClass().add("status-processing");
+                case "Hoàn tất" -> statusLabel.getStyleClass().add("status-completed");
+                case "Lỗi" -> statusLabel.getStyleClass().add("status-error");
             }
 
             // Load items
-            List<SalesRequestItem> items = controller.getSalesRequestItems(requestId);
-            List<Merchandise> merchandises = new MerchandiseDao().findAll();
-            Map<String, String> merchNameMap = merchandises.stream()
-                    .collect(Collectors.toMap(Merchandise::getMerchandiseCode, Merchandise::getMerchandiseName));
-
-            demandsList.clear();
-            for (SalesRequestItem item : items) {
-                String name = merchNameMap.getOrDefault(item.getMerchandiseCode(), "Không xác định");
-                demandsList.add(new ItemDemand(
-                        item.getMerchandiseCode(),
-                        name,
-                        item.getQuantityOrdered(),
-                        item.getUnit()
-                ));
-            }
+            List<ItemDemand> demands = controller.getDemands(requestId);
+            demandsList.setAll(demands);
 
         } catch (SQLException e) {
             alertMessage.errorMessage("Lỗi tải thông tin yêu cầu: " + e.getMessage());

@@ -13,12 +13,8 @@ import com.oims.core.model.SiteMerchandise;
 import com.oims.core.model.SiteTransportInfo;
 import com.oims.core.model.User;
 import com.oims.core.model.UserRole;
-import com.oims.features.sales_requests.process.IPlanGenerationService;
-import com.oims.features.sales_requests.process.IPlanPersistenceService;
-import com.oims.features.sales_requests.process.ItemConfig;
-import com.oims.features.sales_requests.process.ItemDemand;
-import com.oims.features.sales_requests.process.PlanDTO;
-import com.oims.features.sales_requests.process.SiteStockTransportDTO;
+import com.oims.features.sales_requests.process.dto.*;
+import com.oims.features.sales_requests.process.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -336,7 +332,7 @@ class ProcessCanceledOrderControllerTest {
 
     private static class FakePlanPersistenceService implements IPlanPersistenceService {
         @Override
-        public void savePlan(int requestId, User creator, PlanDTO plan, boolean hasErrors) {
+        public void savePlan(int requestId, int creatorUserId, PlanDTO plan, boolean hasErrors) {
         }
     }
 }

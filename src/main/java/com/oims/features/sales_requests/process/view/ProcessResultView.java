@@ -1,11 +1,10 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.view;
 
 import com.oims.core.model.DeliveryMeans;
-import com.oims.core.model.PurchaseOrder;
-import com.oims.core.model.PurchaseOrderItem;
-import com.oims.core.model.SalesRequest;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
+import com.oims.features.sales_requests.process.controller.ProcessResultController;
+import com.oims.features.sales_requests.process.dto.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,19 +41,19 @@ public class ProcessResultView implements Initializable {
     private Label statusLabel;
 
     @FXML
-    private TableView<PurchaseOrder> ordersTable;
+    private TableView<PurchaseOrderDTO> ordersTable;
 
     @FXML
-    private TableColumn<PurchaseOrder, String> orderIdCol;
+    private TableColumn<PurchaseOrderDTO, String> orderIdCol;
 
     @FXML
-    private TableColumn<PurchaseOrder, String> orderSiteCol;
+    private TableColumn<PurchaseOrderDTO, String> orderSiteCol;
 
     @FXML
-    private TableColumn<PurchaseOrder, String> orderDeliveryCol;
+    private TableColumn<PurchaseOrderDTO, String> orderDeliveryCol;
 
     @FXML
-    private TableColumn<PurchaseOrder, String> orderStatusCol;
+    private TableColumn<PurchaseOrderDTO, String> orderStatusCol;
 
     @FXML
     private TableView<DisplayOrderItemRow> orderItemsTable;
@@ -90,7 +89,7 @@ public class ProcessResultView implements Initializable {
     private Button backBtn;
 
     private final ProcessResultController controller = new ProcessResultController();
-    private final ObservableList<PurchaseOrder> ordersList = FXCollections.observableArrayList();
+    private final ObservableList<PurchaseOrderDTO> ordersList = FXCollections.observableArrayList();
     private final ObservableList<DisplayOrderItemRow> orderItemsList = FXCollections.observableArrayList();
     private final ObservableList<ProcessedErrorDTO> errorsList = FXCollections.observableArrayList();
 
@@ -117,10 +116,10 @@ public class ProcessResultView implements Initializable {
 
     private void initTableColumns() {
         // Orders Table
-        orderIdCol.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getOrderId())));
-        orderSiteCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSiteCode() + " - " + controller.resolveSiteName(cell.getValue().getSiteCode())));
-        orderDeliveryCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getDeliveryMeans() == DeliveryMeans.SHIP_DELIVERY ? "Đường biển (Tàu)" : "Đường hàng không (Máy bay)"));
-        orderStatusCol.setCellValueFactory(cell -> new SimpleStringProperty(switch (cell.getValue().getStatus()) {
+        orderIdCol.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().orderId())));
+        orderSiteCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().siteCode() + " - " + cell.getValue().siteName()));
+        orderDeliveryCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().deliveryMeans() == DeliveryMeans.SHIP_DELIVERY ? "Đường biển (Tàu)" : "Đường hàng không (Máy bay)"));
+        orderStatusCol.setCellValueFactory(cell -> new SimpleStringProperty(switch (cell.getValue().status()) {
             case DRAFT -> "Bản nháp";
             case SENT -> "Đã gửi";
             case CONFIRMED -> "Xác nhận";
@@ -143,31 +142,25 @@ public class ProcessResultView implements Initializable {
 
     private void loadRequestData() {
         try {
-            Optional<SalesRequest> requestOpt = controller.getSalesRequest(requestId);
+            Optional<SalesRequestDTO> requestOpt = controller.getSalesRequest(requestId);
             if (requestOpt.isEmpty()) {
                 new AlertMessage().errorMessage("Yêu cầu nhập hàng không tồn tại.");
                 handleBack();
                 return;
             }
 
-            SalesRequest request = requestOpt.get();
-            requestIdLabel.setText(String.valueOf(request.getRequestId()));
-            creatorNameLabel.setText(controller.getCreatorName(request.getCreatedBy()));
-            creationDateLabel.setText(request.getCreatedDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            SalesRequestDTO request = requestOpt.get();
+            requestIdLabel.setText(String.valueOf(request.requestId()));
+            creatorNameLabel.setText(controller.getCreatorName(request.createdBy()));
+            creationDateLabel.setText(request.createdDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             
-            String statusText = switch (request.getStatus()) {
-                case PENDING -> "Chờ xử lý";
-                case PROCESSING -> "Đang xử lý";
-                case COMPLETED -> "Hoàn tất";
-                case ERROR -> "Lỗi";
-            };
-            statusLabel.setText(statusText);
+            statusLabel.setText(request.statusText());
             statusLabel.getStyleClass().removeAll("status-pending", "status-processing", "status-completed", "status-error");
-            switch (request.getStatus()) {
-                case PENDING -> statusLabel.getStyleClass().add("status-pending");
-                case PROCESSING -> statusLabel.getStyleClass().add("status-processing");
-                case COMPLETED -> statusLabel.getStyleClass().add("status-completed");
-                case ERROR -> statusLabel.getStyleClass().add("status-error");
+            switch (request.statusText()) {
+                case "Chờ xử lý" -> statusLabel.getStyleClass().add("status-pending");
+                case "Đang xử lý" -> statusLabel.getStyleClass().add("status-processing");
+                case "Hoàn tất" -> statusLabel.getStyleClass().add("status-completed");
+                case "Lỗi" -> statusLabel.getStyleClass().add("status-error");
             }
         } catch (SQLException e) {
             new AlertMessage().errorMessage("Lỗi tải thông tin yêu cầu: " + e.getMessage());
@@ -178,7 +171,7 @@ public class ProcessResultView implements Initializable {
     private void loadResultData() {
         try {
             // Load created purchase orders
-            List<PurchaseOrder> pos = controller.getPurchaseOrders(requestId);
+            List<PurchaseOrderDTO> pos = controller.getPurchaseOrders(requestId);
             ordersList.setAll(pos);
 
             // Select first purchase order if any
@@ -208,16 +201,15 @@ public class ProcessResultView implements Initializable {
         backBtn.setOnAction(event -> handleBack());
     }
 
-    private void handleOrderSelection(PurchaseOrder order) {
+    private void handleOrderSelection(PurchaseOrderDTO order) {
         try {
             orderItemsList.clear();
-            List<PurchaseOrderItem> items = controller.getPurchaseOrderItems(order.getOrderId());
-            for (PurchaseOrderItem item : items) {
-                String merchName = controller.resolveMerchandiseName(item.getMerchandiseCode());
+            List<AllocatedItem> items = controller.getPurchaseOrderItems(order.orderId());
+            for (AllocatedItem item : items) {
                 orderItemsList.add(new DisplayOrderItemRow(
-                        item.getMerchandiseCode() + " - " + merchName,
-                        String.valueOf(item.getQuantityOrdered()),
-                        item.getUnit()
+                        item.merchandiseCode() + " - " + item.merchandiseName(),
+                        String.valueOf(item.quantity()),
+                        item.unit()
                 ));
             }
         } catch (SQLException e) {

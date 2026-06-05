@@ -17,4 +17,7 @@ public interface ISalesRequestDao {
     boolean updateStatus(Connection connection, int requestId, SalesRequestStatus status) throws SQLException;
     boolean updateStatus(int requestId, SalesRequestStatus status) throws SQLException;
     boolean updateStatusIfCurrent(int requestId, SalesRequestStatus expectedStatus, SalesRequestStatus newStatus) throws SQLException;
+    default Connection getConnection() throws SQLException {
+        return null;
+    }
 }

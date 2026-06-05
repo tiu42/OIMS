@@ -5,7 +5,7 @@ import com.oims.core.model.PurchaseOrder;
 import com.oims.core.model.User;
 import com.oims.core.session.AppSession;
 import com.oims.core.util.AlertMessage;
-import com.oims.features.sales_requests.process.*;
+import com.oims.features.sales_requests.process.dto.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

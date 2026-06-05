@@ -1,6 +1,5 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.service;
 
-import com.oims.core.database.DBConnection;
 import com.oims.core.dao.IPurchaseOrderDao;
 import com.oims.core.dao.IPurchaseOrderItemDao;
 import com.oims.core.dao.ISalesRequestDao;
@@ -9,7 +8,7 @@ import com.oims.core.model.PurchaseOrder;
 import com.oims.core.model.PurchaseOrderItem;
 import com.oims.core.model.PurchaseOrderStatus;
 import com.oims.core.model.SalesRequestStatus;
-import com.oims.core.model.User;
+import com.oims.features.sales_requests.process.dto.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -32,8 +31,9 @@ public class PlanPersistenceService implements IPlanPersistenceService {
         this.salesRequestDao = salesRequestDao;
     }
 
-    public void savePlan(int requestId, User creator, PlanDTO plan, boolean hasErrors) throws SQLException {
-        try (Connection conn = DBConnection.getConnection()) {
+    @Override
+    public void savePlan(int requestId, int creatorUserId, PlanDTO plan, boolean hasErrors) throws SQLException {
+        try (Connection conn = salesRequestDao.getConnection()) {
             conn.setAutoCommit(false);
             try {
                 // 1. Create Purchase Orders
@@ -42,7 +42,7 @@ public class PlanPersistenceService implements IPlanPersistenceService {
                             0,
                             requestId,
                             order.siteCode(),
-                            creator.getUserId(),
+                            creatorUserId,
                             LocalDate.now(),
                             order.deliveryMeans(),
                             PurchaseOrderStatus.DRAFT

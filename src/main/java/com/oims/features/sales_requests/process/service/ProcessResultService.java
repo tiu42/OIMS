@@ -1,13 +1,16 @@
-package com.oims.features.sales_requests.process;
+package com.oims.features.sales_requests.process.service;
 
 import com.oims.core.dao.*;
 import com.oims.core.model.*;
+import com.oims.features.sales_requests.process.dto.ProcessedErrorDTO;
+import com.oims.features.sales_requests.process.dto.SalesRequestDTO;
+import com.oims.features.sales_requests.process.dto.PurchaseOrderDTO;
+import com.oims.features.sales_requests.process.dto.AllocatedItem;
 
 import java.sql.SQLException;
 import java.util.*;
 
-public class ProcessResultController {
-    private final ISalesRequestDao salesRequestDao;
+public class ProcessResultService implements IProcessResultService {
     private final IUserDao userDao;
     private final IPurchaseOrderDao purchaseOrderDao;
     private final IPurchaseOrderItemDao purchaseOrderItemDao;
@@ -15,9 +18,9 @@ public class ProcessResultController {
     private final IMerchandiseDao merchandiseDao;
     private final IImportSiteDao importSiteDao;
     private final ISiteMerchandiseDao siteMerchandiseDao;
+    private final ISalesRequestDao salesRequestDao;
 
-    public ProcessResultController() {
-        this.salesRequestDao = DaoFactory.getSalesRequestDao();
+    public ProcessResultService() {
         this.userDao = DaoFactory.getUserDao();
         this.purchaseOrderDao = DaoFactory.getPurchaseOrderDao();
         this.purchaseOrderItemDao = DaoFactory.getPurchaseOrderItemDao();
@@ -25,12 +28,13 @@ public class ProcessResultController {
         this.merchandiseDao = DaoFactory.getMerchandiseDao();
         this.importSiteDao = DaoFactory.getImportSiteDao();
         this.siteMerchandiseDao = DaoFactory.getSiteMerchandiseDao();
+        this.salesRequestDao = DaoFactory.getSalesRequestDao();
     }
 
-    public ProcessResultController(ISalesRequestDao salesRequestDao, IUserDao userDao, IPurchaseOrderDao purchaseOrderDao,
-                                   IPurchaseOrderItemDao purchaseOrderItemDao, ISalesRequestItemDao salesRequestItemDao,
-                                   IMerchandiseDao merchandiseDao, IImportSiteDao importSiteDao, ISiteMerchandiseDao siteMerchandiseDao) {
-        this.salesRequestDao = salesRequestDao;
+    public ProcessResultService(IUserDao userDao, IPurchaseOrderDao purchaseOrderDao,
+                                IPurchaseOrderItemDao purchaseOrderItemDao, ISalesRequestItemDao salesRequestItemDao,
+                                IMerchandiseDao merchandiseDao, IImportSiteDao importSiteDao, ISiteMerchandiseDao siteMerchandiseDao,
+                                ISalesRequestDao salesRequestDao) {
         this.userDao = userDao;
         this.purchaseOrderDao = purchaseOrderDao;
         this.purchaseOrderItemDao = purchaseOrderItemDao;
@@ -38,12 +42,65 @@ public class ProcessResultController {
         this.merchandiseDao = merchandiseDao;
         this.importSiteDao = importSiteDao;
         this.siteMerchandiseDao = siteMerchandiseDao;
+        this.salesRequestDao = salesRequestDao;
     }
 
-    public Optional<SalesRequest> getSalesRequest(int requestId) throws SQLException {
-        return salesRequestDao.findById(requestId);
+    @Override
+    public Optional<SalesRequestDTO> getSalesRequest(int requestId) throws SQLException {
+        return salesRequestDao.findById(requestId)
+                .map(req -> {
+                    String statusText = switch (req.getStatus()) {
+                        case PENDING -> "Chờ xử lý";
+                        case PROCESSING -> "Đang xử lý";
+                        case COMPLETED -> "Hoàn tất";
+                        case ERROR -> "Lỗi";
+                    };
+                    return new SalesRequestDTO(
+                            req.getRequestId(),
+                            req.getCreatedBy(),
+                            req.getCreatedDate(),
+                            statusText
+                    );
+                });
     }
 
+    @Override
+    public List<PurchaseOrderDTO> getPurchaseOrders(int requestId) throws SQLException {
+        List<PurchaseOrder> pos = purchaseOrderDao.findByRequestId(requestId);
+        List<PurchaseOrderDTO> dtos = new ArrayList<>();
+        for (PurchaseOrder po : pos) {
+            String siteName = resolveSiteName(po.getSiteCode());
+            dtos.add(new PurchaseOrderDTO(
+                    po.getOrderId(),
+                    po.getRequestId(),
+                    po.getSiteCode(),
+                    siteName,
+                    po.getCreatedBy(),
+                    po.getOrderDate(),
+                    po.getDeliveryMeans(),
+                    po.getStatus()
+            ));
+        }
+        return dtos;
+    }
+
+    @Override
+    public List<AllocatedItem> getPurchaseOrderItems(int orderId) throws SQLException {
+        List<PurchaseOrderItem> items = purchaseOrderItemDao.findByOrderId(orderId);
+        List<AllocatedItem> dtos = new ArrayList<>();
+        for (PurchaseOrderItem item : items) {
+            String merchName = resolveMerchandiseName(item.getMerchandiseCode());
+            dtos.add(new AllocatedItem(
+                    item.getMerchandiseCode(),
+                    merchName,
+                    item.getQuantityOrdered(),
+                    item.getUnit()
+            ));
+        }
+        return dtos;
+    }
+
+    @Override
     public String getCreatorName(int userId) {
         try {
             return userDao.findById(userId)
@@ -58,18 +115,7 @@ public class ProcessResultController {
         }
     }
 
-    public List<PurchaseOrder> getPurchaseOrders(int requestId) throws SQLException {
-        return purchaseOrderDao.findByRequestId(requestId);
-    }
-
-    public List<PurchaseOrderItem> getPurchaseOrderItems(int orderId) throws SQLException {
-        return purchaseOrderItemDao.findByOrderId(orderId);
-    }
-
-    public List<SalesRequestItem> getSalesRequestItems(int requestId) throws SQLException {
-        return salesRequestItemDao.findByRequestId(requestId);
-    }
-
+    @Override
     public String resolveMerchandiseName(String merchandiseCode) {
         try {
             return merchandiseDao.findById(merchandiseCode)
@@ -80,6 +126,7 @@ public class ProcessResultController {
         }
     }
 
+    @Override
     public String resolveSiteName(String siteCode) {
         try {
             return importSiteDao.findById(siteCode)
@@ -90,13 +137,14 @@ public class ProcessResultController {
         }
     }
 
+    @Override
     public List<ProcessedErrorDTO> getProcessingErrors(int requestId) throws SQLException {
-        List<SalesRequestItem> requestItems = getSalesRequestItems(requestId);
-        List<PurchaseOrder> purchaseOrders = getPurchaseOrders(requestId);
+        List<SalesRequestItem> requestItems = salesRequestItemDao.findByRequestId(requestId);
+        List<PurchaseOrder> purchaseOrders = purchaseOrderDao.findByRequestId(requestId);
 
         Map<String, Integer> allocatedMap = new HashMap<>();
         for (PurchaseOrder po : purchaseOrders) {
-            List<PurchaseOrderItem> poItems = getPurchaseOrderItems(po.getOrderId());
+            List<PurchaseOrderItem> poItems = purchaseOrderItemDao.findByOrderId(po.getOrderId());
             for (PurchaseOrderItem poi : poItems) {
                 allocatedMap.put(
                         poi.getMerchandiseCode(),
