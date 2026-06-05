@@ -4,7 +4,7 @@
 
 - **Use case:** Sửa yêu cầu nhập hàng
 - **Lớp được kiểm thử:** `com.oims.features.sales_requests.edit.EditRequestController`
-- **Phương thức được kiểm thử:** `updateSalesRequest(int requestId, User modifier, List<TempRequestItem> tempItems)`
+- **Phương thức được kiểm thử:** `updateSalesRequest(int requestId, User modifier, List<RequestItemDTO> items)`
 - **Lớp JUnit tự động:** `com.oims.features.sales_requests.edit.EditRequestControllerTest`
 - **Framework:** JUnit 5
 

@@ -12,6 +12,9 @@ import com.oims.core.model.User;
 import com.oims.core.model.UserRole;
 import com.oims.core.session.AppSession;
 import com.oims.features.sales_requests.detail.RequestDetailController.RequestDetailDTO;
+import com.oims.features.sales_requests.edit.DefaultSalesRequestEditPolicy;
+import com.oims.features.sales_requests.edit.EditRequestService;
+import com.oims.features.sales_requests.edit.IEditRequestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,11 +36,22 @@ class RequestDetailControllerTest {
         salesRequestDao = new FakeSalesRequestDao();
         salesRequestItemDao = new FakeSalesRequestItemDao();
         merchandiseDao = new FakeMerchandiseDao();
+
+        IEditRequestService editRequestService = new EditRequestService(
+                merchandiseDao,
+                salesRequestDao,
+                salesRequestItemDao,
+                new FakeUserDao(),
+                new DefaultSalesRequestEditPolicy()
+        );
+
         controller = new RequestDetailController(
                 salesRequestDao,
                 new FakeUserDao(),
                 salesRequestItemDao,
-                merchandiseDao
+                merchandiseDao,
+                editRequestService,
+                new DefaultSalesRequestEditPolicy()
         );
         AppSession.getInstance().setSelectedRequestId(7);
     }
@@ -135,6 +149,16 @@ class RequestDetailControllerTest {
         public boolean updateStatus(Connection connection, int requestId, SalesRequestStatus status) {
             return true;
         }
+
+        @Override
+        public boolean updateStatus(int requestId, SalesRequestStatus status) {
+            return true;
+        }
+
+        @Override
+        public boolean updateStatusIfCurrent(int requestId, SalesRequestStatus expectedStatus, SalesRequestStatus newStatus) {
+            return true;
+        }
     }
 
     private static class FakeUserDao implements IUserDao {
@@ -198,6 +222,11 @@ class RequestDetailControllerTest {
         }
 
         @Override
+        public int insert(Connection connection, SalesRequestItem item) {
+            return insert(item);
+        }
+
+        @Override
         public boolean update(SalesRequestItem item) {
             return true;
         }
@@ -209,6 +238,10 @@ class RequestDetailControllerTest {
 
         @Override
         public void deleteByRequestId(int requestId) {
+        }
+
+        @Override
+        public void deleteByRequestId(Connection connection, int requestId) {
         }
     }
 
