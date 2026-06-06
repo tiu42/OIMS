@@ -66,21 +66,21 @@ public final class AppSession {
         this.selectedOrderId.set(null);
     }
 
-    private final ObjectProperty<Integer> selectedSiteId = new SimpleObjectProperty<>(null);
-    public ObjectProperty<Integer> selectedSiteIdProperty() {
-        return selectedSiteId;
+    private final ObjectProperty<String> selectedSiteCode = new SimpleObjectProperty<>(null);
+    public ObjectProperty<String> selectedSiteCodeProperty() {
+        return selectedSiteCode;
     }
 
-    public Integer getSelectedSiteId() {
-        return selectedSiteId.get();
+    public String getSelectedSiteCode() {
+        return selectedSiteCode.get();
     }
 
-    public void setSelectedSiteId(Integer id) {
-        this.selectedSiteId.set(id);
+    public void setSelectedSiteCode(String siteCode) {
+        this.selectedSiteCode.set(siteCode);
     }
 
     public void clearSelectedSite() {
-        this.selectedSiteId.set(null);
+        this.selectedSiteCode.set(null);
     }
 
     private final ObjectProperty<Integer> selectedMerchandiseId = new SimpleObjectProperty<>(null);

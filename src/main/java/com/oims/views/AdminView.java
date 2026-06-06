@@ -35,7 +35,6 @@ public final class AdminView extends MainView {
                 ),
                 section("Quản lý đối tác",
                         item("Danh sách site đối tác", "/com/oims/features/site/list-site-view.fxml", ()->true),
-                        item("Xem chi tiết site", "/com/oims/features/site/detail-site-view.fxml", ()->true),
                         item("Thêm site đối tác", "/com/oims/features/site/create-site-view.fxml", ()->true)
                 ))));
     }

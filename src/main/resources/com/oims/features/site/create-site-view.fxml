@@ -1,19 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <center>
-        <StackPane>
-            <children>
-                <Label text="Thêm site đối tác" />
-            </children>
-            <padding>
-                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
-            </padding>
-        </StackPane>
-    </center>
+<BorderPane prefHeight="720.0" prefWidth="960.0" stylesheets="@../sales_requests/create-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.site.create.CreateSiteView">
+   <padding>
+      <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+   </padding>
+   <center>
+      <VBox spacing="18.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox spacing="12.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Thêm site đối tác mới" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Người tạo" />
+                              <Label fx:id="creatorNameLabel" styleClass="info-value" text="—" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Ngày tạo" />
+                              <Label fx:id="creationDateLabel" styleClass="info-value" text="—" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Trạng thái" />
+                              <Label styleClass="status-new" text="Tạo mới" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <VBox spacing="12.0" styleClass="form-card">
+               <children>
+                  <HBox spacing="12.0">
+                     <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="form-label" text="Mã site *" />
+                              <TextField fx:id="siteCodeField" maxWidth="Infinity" promptText="VD: SITE21" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="form-label" text="Tên site *" />
+                              <TextField fx:id="siteNameField" maxWidth="Infinity" promptText="Tên site đối tác" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label styleClass="form-label" text="Quốc gia *" />
+                        <TextField fx:id="countryField" maxWidth="Infinity" promptText="VD: Việt Nam" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label styleClass="form-label" text="Thông tin liên hệ" />
+                        <TextArea fx:id="contactInfoArea" prefRowCount="4" promptText="Email, số điện thoại, địa chỉ..." wrapText="true" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+               </padding>
+            </VBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Button fx:id="submitBtn" mnemonicParsing="false" styleClass="btn-submit" text="Lưu site" />
+                  <Button fx:id="cancelBtn" mnemonicParsing="false" styleClass="btn-cancel" text="Hủy" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
 </BorderPane>
