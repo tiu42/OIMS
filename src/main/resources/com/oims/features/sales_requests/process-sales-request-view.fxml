@@ -56,9 +56,10 @@
                      </placeholder>
                      <columns>
                         <TableColumn fx:id="itemCodeCol" prefWidth="150.0" text="Mã mặt hàng" />
-                        <TableColumn fx:id="itemNameCol" prefWidth="350.0" text="Tên mặt hàng" />
-                        <TableColumn fx:id="itemQtyCol" prefWidth="120.0" text="Số lượng" />
-                        <TableColumn fx:id="itemUnitCol" prefWidth="120.0" text="Đơn vị" />
+                        <TableColumn fx:id="itemNameCol" prefWidth="250.0" text="Tên mặt hàng" />
+                        <TableColumn fx:id="itemQtyCol" prefWidth="100.0" text="Số lượng" />
+                        <TableColumn fx:id="itemUnitCol" prefWidth="100.0" text="Đơn vị" />
+                        <TableColumn fx:id="itemDesiredDateCol" prefWidth="180.0" text="Ngày nhận mong muốn" />
                      </columns>
                   </TableView>
 
@@ -103,7 +104,7 @@
                         </GridPane>
                         <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="config-actions">
                            <children>
-                              <Button fx:id="setDefaultBtn" mnemonicParsing="false" styleClass="btn-default" text="Đặt về mặc định (Tàu &amp; Không ưu tiên site)" />
+                              <Button fx:id="setDefaultBtn" mnemonicParsing="false" styleClass="btn-default" text="Đặt về mặc định (Bay &amp; Không ưu tiên site)" />
                               <Label fx:id="configStatusLabel" styleClass="config-status-default" text="Trạng thái: Mặc định" />
                            </children>
                         </HBox>

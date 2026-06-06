@@ -56,10 +56,10 @@
                      </placeholder>
                      <columns>
                         <TableColumn fx:id="planNameCol" prefWidth="120.0" text="Phương án" />
-                        <TableColumn fx:id="planSitesCountCol" prefWidth="150.0" text="Số lượng site" />
+                        <TableColumn fx:id="planSitesCountCol" prefWidth="150.0" text="Số lượng đơn" />
                         <TableColumn fx:id="planPrefSitesCol" prefWidth="180.0" text="Khớp site ưu tiên" />
                         <TableColumn fx:id="planPrefDelivCol" prefWidth="180.0" text="Khớp vận chuyển" />
-                        <TableColumn fx:id="planTotalStockCol" prefWidth="180.0" text="Tổng tồn kho site" />
+                        <TableColumn fx:id="planTotalStockCol" prefWidth="180.0" text="Ngày nhận hàng muộn nhất" />
                      </columns>
                   </TableView>
 
@@ -71,8 +71,9 @@
                      <columns>
                         <TableColumn fx:id="detailSiteCol" prefWidth="180.0" text="Nhà cung cấp (Site)" />
                         <TableColumn fx:id="detailDeliveryCol" prefWidth="180.0" text="Phương thức vận chuyển" />
-                        <TableColumn fx:id="detailMerchCol" prefWidth="300.0" text="Mặt hàng" />
-                        <TableColumn fx:id="detailQtyCol" prefWidth="150.0" text="Số lượng đặt" />
+                        <TableColumn fx:id="detailMerchCol" prefWidth="250.0" text="Mặt hàng" />
+                        <TableColumn fx:id="detailQtyCol" prefWidth="120.0" text="Số lượng đặt" />
+                        <TableColumn fx:id="detailExpectedDateCol" prefWidth="150.0" text="Ngày nhận dự kiến" />
                      </columns>
                   </TableView>
 

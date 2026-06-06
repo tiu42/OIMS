@@ -96,6 +96,26 @@ class PlanGenerationServiceTest {
                 plan.orders().get(0).deliveryMeans() == DeliveryMeans.AIR_DELIVERY));
     }
 
+    @Test
+    void generatePlansDefaultsToAirDeliveryAndPrioritizesIt() throws SQLException {
+        List<PlanDTO> plans = service.generatePlans(
+                List.of(new ItemDemand("M001", "Keyboard", 10, "pcs")),
+                Map.of(), // No configurations passed, should default to AIR_DELIVERY
+                Map.of("M001", List.of(
+                        new SiteStockTransportDTO("SITE01", "Tokyo Site", "Japan", 15, "pcs", 7, 2)
+                ))
+        );
+
+        // Since it defaults to AIR_DELIVERY preference, the plan with AIR_DELIVERY (index 0 after sort) should be first
+        assertFalse(plans.isEmpty());
+        PlanDTO bestPlan = plans.get(0);
+        assertEquals(DeliveryMeans.AIR_DELIVERY, bestPlan.orders().get(0).deliveryMeans());
+        
+        // Verify expected delivery date is set (should be now + 2 days for air)
+        java.time.LocalDate expectedDate = bestPlan.orders().get(0).expectedDeliveryDate();
+        assertEquals(java.time.LocalDate.now().plusDays(2), expectedDate);
+    }
+
     private static class FakeImportSiteDao implements IImportSiteDao {
         private final List<ImportSite> sites = List.of(
                 new ImportSite("SITE01", "Tokyo Site", "Japan", "tokyo@example.com"),
