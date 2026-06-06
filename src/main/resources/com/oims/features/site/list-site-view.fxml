@@ -1,19 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="780.0" prefWidth="1280.0" stylesheets="@list-site-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.site.list.SiteListController">
+    <padding>
+        <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+    </padding>
     <center>
-        <StackPane>
+        <VBox spacing="18.0" BorderPane.alignment="CENTER">
             <children>
-                <Label text="Danh sách site đối tác" />
+                <VBox spacing="14.0">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <children>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="titleLabel" text="Danh sách site đối tác" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <TextField fx:id="searchField" prefWidth="360.0" promptText="Tìm theo mã, tên, quốc gia..." />
+                                <Button fx:id="refreshButton" text="Làm mới" />
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <VBox spacing="4.0">
+                                    <children>
+                                        <Label text="Tổng site">
+                                            <font>
+                                                <Font name="System Bold" size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="totalSitesLabel" text="0" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label text="Danh sách site" />
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="siteTable" fixedCellSize="46.0" styleClass="site-table" VBox.vgrow="ALWAYS">
+                            <placeholder>
+                                <Label text="Không có site đối tác nào" />
+                            </placeholder>
+                            <columns>
+                                <TableColumn fx:id="selectColumn" prefWidth="70.0" text="Chọn" />
+                                <TableColumn fx:id="siteCodeColumn" prefWidth="140.0" text="Mã site" />
+                                <TableColumn fx:id="siteNameColumn" prefWidth="280.0" text="Tên site" />
+                                <TableColumn fx:id="countryColumn" prefWidth="180.0" text="Quốc gia" />
+                                <TableColumn fx:id="contactColumn" prefWidth="320.0" text="Thông tin liên hệ" />
+                            </columns>
+                        </TableView>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <Label text="10 bản ghi / trang" />
+                                <Label fx:id="pageInfoLabel" text="Trang 1 / 1" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button fx:id="pagePrevButton" styleClass="pagination-arrow" text="‹" />
+                                <Button fx:id="pageButton1" styleClass="pagination-page" text="1" />
+                                <Button fx:id="pageButton2" styleClass="pagination-page" text="2" />
+                                <Button fx:id="pageButton3" styleClass="pagination-page" text="3" />
+                                <Button fx:id="pageButton4" styleClass="pagination-page" text="4" />
+                                <Button fx:id="pageButton5" styleClass="pagination-page" text="5" />
+                                <Button fx:id="pageNextButton" styleClass="pagination-arrow" text="›" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
             </children>
-            <padding>
-                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
-            </padding>
-        </StackPane>
+        </VBox>
     </center>
 </BorderPane>

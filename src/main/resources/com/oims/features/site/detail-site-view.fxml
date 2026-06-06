@@ -1,19 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="720.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <center>
-        <StackPane>
-            <children>
-                <Label text="Chi tiết site đối tác" />
-            </children>
-            <padding>
-                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
-            </padding>
-        </StackPane>
-    </center>
+<BorderPane prefHeight="780.0" prefWidth="1280.0" stylesheets="@../sales_requests/detail-sales-request-view.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oims.features.site.detail.SiteDetailView">
+   <padding>
+      <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+   </padding>
+   <center>
+      <VBox spacing="18.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox spacing="12.0">
+               <children>
+                  <Label fx:id="pageTitle" text="Chi tiết site đối tác" />
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Mã site" />
+                              <Label fx:id="siteCodeLabel" styleClass="info-value" text="—" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Tên site" />
+                              <Label fx:id="siteNameLabel" styleClass="info-value" text="—" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Quốc gia" />
+                              <Label fx:id="countryLabel" styleClass="info-value" text="—" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="24.0" styleClass="info-card">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label styleClass="info-key" text="Thông tin liên hệ" />
+                              <Label fx:id="contactInfoLabel" styleClass="info-value" text="—" wrapText="true" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+
+            <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="Mặt hàng của site" />
+                  <TableView fx:id="merchandiseTable" fixedCellSize="46.0" prefHeight="200.0" styleClass="detail-request-table">
+                    <placeholder>
+                        <Label text="Site chưa có mặt hàng nào" />
+                    </placeholder>
+                    <columns>
+                      <TableColumn fx:id="merchCodeColumn" prefWidth="140.0" text="Mã mặt hàng" />
+                      <TableColumn fx:id="merchNameColumn" prefWidth="280.0" text="Tên mặt hàng" />
+                      <TableColumn fx:id="stockQuantityColumn" prefWidth="140.0" text="Tồn kho" />
+                      <TableColumn fx:id="stockUnitColumn" prefWidth="110.0" text="Đơn vị" />
+                      <TableColumn fx:id="stockUpdatedColumn" prefWidth="160.0" text="Ngày cập nhật tồn" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+
+            <VBox spacing="12.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="Thông tin vận chuyển" />
+                  <TableView fx:id="transportTable" fixedCellSize="46.0" prefHeight="160.0" styleClass="detail-request-table">
+                    <placeholder>
+                        <Label text="Chưa có thông tin vận chuyển cho site này" />
+                    </placeholder>
+                    <columns>
+                      <TableColumn fx:id="shipDaysColumn" prefWidth="160.0" text="Số ngày vận chuyển (đường biển)" />
+                      <TableColumn fx:id="airDaysColumn" prefWidth="160.0" text="Số ngày vận chuyển (đường hàng không)" />
+                      <TableColumn fx:id="otherInfoColumn" prefWidth="280.0" text="Thông tin khác" />
+                      <TableColumn fx:id="updatedDateColumn" prefWidth="180.0" text="Ngày cập nhật" />
+                    </columns>
+                  </TableView>
+                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                     <children>
+                        <Button fx:id="backToListBtn" mnemonicParsing="false" text="Quay lại danh sách" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
 </BorderPane>

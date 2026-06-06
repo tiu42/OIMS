@@ -357,21 +357,25 @@ public class EditRequestView implements Initializable {
             return;
         }
 
-        // Check if item already exists in table
-        for (DisplayRow row : addedItemsList) {
-            if (row.getCode().equals(selectedMerch.getMerchandiseCode())) {
-                alertMessage.errorMessage("Mặt hàng này đã có trong danh sách yêu cầu.");
-                return;
-            }
-        }
-
-        addedItemsList.add(new DisplayRow(
+        DisplayRow newRow = new DisplayRow(
                 selectedMerch.getMerchandiseCode(),
                 selectedMerch.getMerchandiseName(),
                 qty,
                 unit,
                 date
-        ));
+        );
+
+        boolean replaced = false;
+        for (int i = 0; i < addedItemsList.size(); i++) {
+            if (addedItemsList.get(i).getCode().equals(selectedMerch.getMerchandiseCode())) {
+                addedItemsList.set(i, newRow);
+                replaced = true;
+                break;
+            }
+        }
+        if (!replaced) {
+            addedItemsList.add(newRow);
+        }
 
         // Clear input form except date
         merchComboBox.setValue(null);

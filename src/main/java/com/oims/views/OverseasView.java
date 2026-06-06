@@ -22,8 +22,7 @@ public final class OverseasView extends MainView {
                 ),
                 section("Quản lý đối tác",
                         item("Danh sách site đối tác", "/com/oims/features/site/list-site-view.fxml",()->true),
-                        item("Xem chi tiết site", "/com/oims/features/site/detail-site-view.fxml",this::check_session_site),
-                        item("Thêm site đối tác", "/com/oims/features/site/create-site-view.fxml",this::check_session_site)
+                        item("Thêm site đối tác", "/com/oims/features/site/create-site-view.fxml",()->true)
                 ))));
     }
 
@@ -78,14 +77,6 @@ public final class OverseasView extends MainView {
             }
         } catch (java.sql.SQLException e) {
             alertMessage.errorMessage("Lỗi cơ sở dữ liệu: " + e.getMessage());
-            return false;
-        }
-        return true;
-    }
-
-    boolean check_session_site(){
-        if (AppSession.getInstance().getSelectedSiteId()==null){
-            alertMessage.errorMessage("Chưa có site nào được chọn! Hãy chọn 1 site từ danh sách.");
             return false;
         }
         return true;
