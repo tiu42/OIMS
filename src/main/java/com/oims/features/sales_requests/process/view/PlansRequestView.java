@@ -73,6 +73,9 @@ public class PlansRequestView implements Initializable {
     private TableColumn<DisplayDetailRow, String> detailQtyCol;
 
     @FXML
+    private TableColumn<DisplayDetailRow, String> detailExpectedDateCol;
+
+    @FXML
     private Button confirmPlanBtn;
 
     @FXML
@@ -113,13 +116,14 @@ public class PlansRequestView implements Initializable {
         planSitesCountCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSitesCountDisplay()));
         planPrefSitesCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrefSitesDisplay()));
         planPrefDelivCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPrefDeliveryDisplay()));
-        planTotalStockCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getTotalStockDisplay()));
+        planTotalStockCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLatestReceiptDateDisplay()));
 
         // Plan Details Table
         detailSiteCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().siteName()));
         detailDeliveryCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().deliveryMethod()));
         detailMerchCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().merchandiseName()));
         detailQtyCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().quantity()));
+        detailExpectedDateCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().expectedDeliveryDate()));
     }
 
     private void loadRequestData() {
@@ -180,12 +184,16 @@ public class PlansRequestView implements Initializable {
     private void handlePlanSelection(PlanDTO plan) {
         detailsList.clear();
         for (AllocatedOrder order : plan.orders()) {
+            String expectedDateStr = order.expectedDeliveryDate() != null 
+                    ? order.expectedDeliveryDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) 
+                    : "-";
             for (AllocatedItem item : order.items()) {
                 detailsList.add(new DisplayDetailRow(
                         order.siteCode() + " - " + order.siteName(),
                         order.deliveryMeans() == DeliveryMeans.SHIP_DELIVERY ? "Đường biển (Tàu)" : "Đường hàng không (Máy bay)",
                         item.merchandiseCode() + " - " + item.merchandiseName(),
-                        item.quantity() + " " + item.unit()
+                        item.quantity() + " " + item.unit(),
+                        expectedDateStr
                 ));
             }
         }
@@ -243,5 +251,9 @@ public class PlansRequestView implements Initializable {
     }
 
     // Helper record for table binding
-    public record DisplayDetailRow(String siteName, String deliveryMethod, String merchandiseName, String quantity) {}
+    public record DisplayDetailRow(String siteName, String deliveryMethod, String merchandiseName, String quantity, String expectedDeliveryDate) {
+        public DisplayDetailRow(String siteName, String deliveryMethod, String merchandiseName, String quantity) {
+            this(siteName, deliveryMethod, merchandiseName, quantity, "-");
+        }
+    }
 }

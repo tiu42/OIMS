@@ -45,7 +45,7 @@ public class PlanPersistenceService implements IPlanPersistenceService {
                             creatorUserId,
                             LocalDate.now(),
                             order.deliveryMeans(),
-                            PurchaseOrderStatus.DRAFT
+                            PurchaseOrderStatus.SENT
                     );
 
                     int orderId = purchaseOrderDao.insert(conn, po);

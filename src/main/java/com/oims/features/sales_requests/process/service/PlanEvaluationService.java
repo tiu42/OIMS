@@ -25,7 +25,7 @@ public class PlanEvaluationService {
 
         for (int i = 0; i < demands.size(); i++) {
             ItemDemand demand = demands.get(i);
-            ItemConfig config = configs.getOrDefault(demand.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.SHIP_DELIVERY));
+            ItemConfig config = configs.getOrDefault(demand.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.AIR_DELIVERY));
             ItemAllocationOption option = combination.get(i);
 
             for (AllocatedItemAllocation allocation : option.allocations()) {
@@ -70,7 +70,11 @@ public class PlanEvaluationService {
                     .map(a -> new AllocatedItem(a.merchandiseCode(), a.merchandiseName(), a.quantity(), a.unit()))
                     .collect(Collectors.toList());
 
-            orders.add(new AllocatedOrder(siteCode, siteName, dm, orderItems));
+            int[] days = getTransportDays(siteCode, cachedSiteStock);
+            int transportDays = (dm == DeliveryMeans.SHIP_DELIVERY) ? days[0] : days[1];
+            java.time.LocalDate expectedDeliveryDate = java.time.LocalDate.now().plusDays(transportDays);
+
+            orders.add(new AllocatedOrder(siteCode, siteName, dm, orderItems, expectedDeliveryDate));
         }
 
         return new PlanDTO(
@@ -81,6 +85,21 @@ public class PlanEvaluationService {
                 prefDeliveryMatched,
                 totalStockCount
         );
+    }
+
+    private int[] getTransportDays(String siteCode, Map<String, List<SiteStockTransportDTO>> cachedSiteStock) {
+        if (cachedSiteStock != null) {
+            for (List<SiteStockTransportDTO> list : cachedSiteStock.values()) {
+                if (list != null) {
+                    for (SiteStockTransportDTO dto : list) {
+                        if (dto != null && siteCode.equals(dto.siteCode())) {
+                            return new int[]{dto.shipDays(), dto.airDays()};
+                        }
+                    }
+                }
+            }
+        }
+        return new int[]{0, 0};
     }
 
     private record SiteDeliveryKey(String siteCode, DeliveryMeans deliveryMeans) {}

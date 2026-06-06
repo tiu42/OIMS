@@ -55,6 +55,9 @@ public class ProcessRequestView implements Initializable {
     private TableColumn<ItemDemand, String> itemUnitCol;
 
     @FXML
+    private TableColumn<ItemDemand, String> itemDesiredDateCol;
+
+    @FXML
     private TableView<SiteStockTransportDTO> siteStockTable;
 
     @FXML
@@ -146,6 +149,9 @@ public class ProcessRequestView implements Initializable {
         itemNameCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().merchandiseName()));
         itemQtyCol.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().quantity())));
         itemUnitCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().unit()));
+        itemDesiredDateCol.setCellValueFactory(cell -> new SimpleStringProperty(
+                cell.getValue().desiredDeliveryDate() != null ? cell.getValue().desiredDeliveryDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : ""
+        ));
 
         // Site Stock Table
         siteCodeCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().siteCode()));
@@ -257,7 +263,7 @@ public class ProcessRequestView implements Initializable {
                     // Defaults
                     prefSiteCombo.setValue("[Không chọn]");
                     nonPrefSiteCombo.setValue("[Không chọn]");
-                    prefDeliveryCombo.setValue("Đường biển (Tàu)"); // default is ship/sea
+                    prefDeliveryCombo.setValue("Đường hàng không (Máy bay)"); // default is air
                     
                     configStatusLabel.setText("Trạng thái: Mặc định");
                     configStatusLabel.getStyleClass().setAll("config-status-default");
@@ -314,9 +320,9 @@ public class ProcessRequestView implements Initializable {
         try {
             prefSiteCombo.setValue("[Không chọn]");
             nonPrefSiteCombo.setValue("[Không chọn]");
-            prefDeliveryCombo.setValue("Đường biển (Tàu)");
+            prefDeliveryCombo.setValue("Đường hàng không (Máy bay)");
             
-            configs.put(selectedItem.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.SHIP_DELIVERY));
+            configs.put(selectedItem.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.AIR_DELIVERY));
             configStatusLabel.setText("Trạng thái: Mặc định");
             configStatusLabel.getStyleClass().setAll("config-status-default");
         } finally {
@@ -384,7 +390,7 @@ public class ProcessRequestView implements Initializable {
             // Populate default configurations for any item that doesn't have custom configs
             for (ItemDemand d : activeDemands) {
                 if (!configs.containsKey(d.merchandiseCode())) {
-                    configs.put(d.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.SHIP_DELIVERY));
+                    configs.put(d.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.AIR_DELIVERY));
                 }
             }
 

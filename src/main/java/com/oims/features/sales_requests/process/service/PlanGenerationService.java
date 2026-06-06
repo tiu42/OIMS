@@ -56,7 +56,7 @@ public class PlanGenerationService implements IPlanGenerationService {
                 siteStockList = Collections.emptyList();
             }
 
-            ItemConfig config = configs.getOrDefault(demand.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.SHIP_DELIVERY));
+            ItemConfig config = configs.getOrDefault(demand.merchandiseCode(), new ItemConfig(null, null, DeliveryMeans.AIR_DELIVERY));
             List<ItemAllocationOption> options = allocationService.generateOptions(
                     demand.merchandiseCode(),
                     demand.merchandiseName(),

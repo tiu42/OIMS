@@ -63,7 +63,8 @@ public class ProcessRequestService implements IProcessRequestService {
                     item.getMerchandiseCode(),
                     name,
                     item.getQuantityOrdered(),
-                    item.getUnit()
+                    item.getUnit(),
+                    item.getDesiredDeliveryDate()
             ));
         }
         return demands;
